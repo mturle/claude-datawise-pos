@@ -814,7 +814,7 @@ function TabKontakt() {
             ))}
           </div>
           <div className="dw-cta-footer">
-            <span>kontakt@datawise.pl</span>
+            <span>info@datawise.pl</span>
             <span>www.datawise.pl</span>
           </div>
         </div>
@@ -876,7 +876,7 @@ function Footer() {
       <footer className="dw-footer">
         <span className="dw-footer-tagline">DataWise · Baza Punktów Sprzedaży FMCG · Polska</span>
         <div className="dw-footer-contact">
-          <a href="mailto:kontakt@datawise.pl">kontakt@datawise.pl</a>
+          <a href="mailto:info@datawise.pl">info@datawise.pl</a>
           <a href="https://www.datawise.pl" target="_blank" rel="noopener noreferrer">www.datawise.pl</a>
         </div>
       </footer>
