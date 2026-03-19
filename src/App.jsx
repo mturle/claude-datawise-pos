@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 /*  GLOBAL CSS                                                                  */
@@ -429,6 +429,66 @@ const GLOBAL_CSS = `
   .dw-footer-contact a { color: var(--yellow); text-decoration: none; font-weight: 500; }
   .dw-footer-contact a:hover { text-decoration: underline; }
 
+  /* ── MAP ─────────────────────────────────────────────────────────────────── */
+  .dw-map-wrap {
+    height: 520px; width: 100%;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .dw-map-container { height: 100%; width: 100%; }
+  .dw-map-legend {
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    padding: 16px 48px;
+    background: var(--light);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px; color: var(--mid);
+  }
+  .dw-map-legend-title { font-weight: 700; color: var(--blue); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px; }
+  .dw-legend-item { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+  .dw-legend-dot { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.6); flex-shrink: 0; }
+  .dw-map-info {
+    padding: 20px 48px 0;
+    font-size: 13px; color: var(--mid); line-height: 1.65;
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  /* ── LEAFLET POPUP OVERRIDES ─────────────────────────────────────────────── */
+  .leaflet-popup-content-wrapper {
+    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1) !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+  .leaflet-popup-content { margin: 0 !important; width: auto !important; min-width: 260px; }
+  .leaflet-popup-tip-container { display: none; }
+  .leaflet-popup-close-button {
+    top: 8px !important; right: 10px !important;
+    color: rgba(255,255,255,0.7) !important; font-size: 18px !important;
+    z-index: 1;
+  }
+  .dw-popup-head {
+    background: var(--blue); padding: 14px 16px;
+  }
+  .dw-popup-name {
+    font-size: 14px; font-weight: 700; color: #fff;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .dw-popup-addr { font-size: 11.5px; color: rgba(255,255,255,0.65); margin-top: 3px; }
+  .dw-popup-rank {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
+    background: var(--yellow); color: var(--blue);
+    padding: 2px 8px; border-radius: 4px; margin-top: 6px;
+  }
+  .dw-popup-body { padding: 10px 0; max-height: 280px; overflow-y: auto; }
+  .dw-popup-section { padding: 6px 16px 4px; font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .dw-popup-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 16px; font-size: 12px; }
+  .dw-popup-row:nth-child(even) { background: var(--light); }
+  .dw-popup-key { color: var(--mid); font-weight: 400; flex-shrink: 0; }
+  .dw-popup-val { color: var(--text); font-weight: 600; text-align: right; }
+
   /* ── HR ──────────────────────────────────────────────────────────────────── */
   .dw-hr { height: 1px; background: var(--border); }
 
@@ -590,11 +650,12 @@ const BENEFITS = [
 ];
 
 const TABS = [
-  { id: "baza",    label: "Baza POS",        icon: "store" },
-  { id: "zrodla",  label: "Źródła danych",   icon: "hub" },
-  { id: "pakiety", label: "Pakiety",          icon: "apps" },
-  { id: "uzycia",  label: "Zastosowania",     icon: "lightbulb" },
-  { id: "kontakt", label: "Próbka & Kontakt", icon: "mail" },
+  { id: "baza",     label: "Baza POS",        icon: "store" },
+  { id: "zrodla",   label: "Źródła danych",   icon: "hub" },
+  { id: "przyklad", label: "Przykład",         icon: "map" },
+  { id: "pakiety",  label: "Pakiety",          icon: "apps" },
+  { id: "uzycia",   label: "Zastosowania",     icon: "lightbulb" },
+  { id: "kontakt",  label: "Próbka & Kontakt", icon: "mail" },
 ];
 
 /* ─────────────────────────────────────────────────────────────────────────── */
@@ -693,6 +754,174 @@ function TabZrodla() {
       <div className="dw-note dw-fade">
         <Icon name="emoji_events" size={22} style={{ color: "#D4A020", flexShrink: 0 }} />
         Jako jedyna firma w Polsce łączymy te trzy źródła w jednym produkcie — gotowym do integracji z systemami CRM i BI.
+      </div>
+    </div>
+  );
+}
+
+/* ── rating → marker color ── */
+const ratingColor = (r) => {
+  if (r == null) return "#8AA8CC";
+  if (r >= 80) return "#0A1F5C";
+  if (r >= 60) return "#1A3A7A";
+  if (r >= 40) return "#2E5CA8";
+  return "#6B8EC4";
+};
+
+const LEGEND = [
+  { label: "80–100",  color: "#0A1F5C" },
+  { label: "60–79",   color: "#1A3A7A" },
+  { label: "40–59",   color: "#2E5CA8" },
+  { label: "0–39",    color: "#6B8EC4" },
+];
+
+/* ── popup HTML helper ── */
+const buildPopup = (p) => {
+  const addr = `${p["Prefix"] || ""} ${p["Ulica"] || ""} ${p["Nr Ulicy"] || ""}, ${p["Kod pocztowy"] || ""} ${p["Miejscowość"] || ""}`.trim();
+
+  const basic = [
+    ["Kategoria", p["Kategoria"]],
+    ["Podkategoria", p["Podkategoria"]],
+    ["Sieć", p["Sieć"]],
+    ["Numer sklepu", p["Numer sklepu"]],
+    ["Typ gminy", p["Typ gminy"]],
+  ];
+
+  const location = [
+    ["W centrum handlowym", p["Lokalizacja w centrum handl."]],
+    ["Nazwa centrum", p["Nazwa centrum"]],
+    ["Format centrum", p["Format centrum"]],
+    ["W parku handlowym", p["Lokalizacja w parku handl."]],
+  ].filter(([, v]) => v !== null && v !== undefined);
+
+  const data = [
+    ["Ranking (0–100)", p["Rankig-0-100"]],
+    ["POI w promieniu 75m", p["Liczba POI w promieniu 75m"]],
+    ["Dyskontów w promieniu 1km", p["Liczba innych dyskontów w promieniu 1km"]],
+    ["Ludność 1km", p["Liczba ludności 1km"]?.toLocaleString("pl-PL")],
+    ["Populacja do 14 lat", p["Odsetek populacji w wieku do 14 lat"]],
+    ["Miejsca pracy 1km", p["Liczba miejsc pracy w promieniu 1km"]?.toLocaleString("pl-PL")],
+    ["Dochód per capita (zł)", p["Dochod rozporzadzalny per capita"]?.toLocaleString("pl-PL")],
+    ["Indeks generatorów ruchu", p["Indeks koncentracji generatorów ruchu"]],
+  ].filter(([, v]) => v !== null && v !== undefined);
+
+  const rows = (arr) => arr.map(([k, v]) =>
+    `<div class="dw-popup-row"><span class="dw-popup-key">${k}</span><span class="dw-popup-val">${v}</span></div>`
+  ).join("");
+
+  return `
+    <div class="dw-popup-head">
+      <div class="dw-popup-name">${p["Sieć"]} #${p["Numer sklepu"]}</div>
+      <div class="dw-popup-addr">${addr}</div>
+      <div class="dw-popup-rank">Ranking: ${p["Rankig-0-100"] ?? "–"} / 100</div>
+    </div>
+    <div class="dw-popup-body">
+      <div class="dw-popup-section">Podstawowe</div>
+      ${rows(basic)}
+      ${location.length ? `<div class="dw-popup-section">Lokalizacja</div>${rows(location)}` : ""}
+      <div class="dw-popup-section">Dane o otoczeniu</div>
+      ${rows(data)}
+    </div>
+  `;
+};
+
+function TabPrzyklad() {
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+
+  useEffect(() => {
+    /* inject Leaflet CSS once */
+    if (!document.getElementById("lf-css")) {
+      const link = document.createElement("link");
+      link.id = "lf-css";
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(link);
+    }
+
+    const init = () => {
+      if (mapInstanceRef.current || !mapRef.current) return;
+      const L = window.L;
+
+      const map = L.map(mapRef.current, { zoomControl: true }).setView([52.1, 19.4], 6);
+
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/">CARTO</a>',
+        subdomains: "abcd",
+        maxZoom: 19,
+      }).addTo(map);
+
+      fetch("/assets/data-sample.geojson")
+        .then((r) => r.json())
+        .then((geojson) => {
+          L.geoJSON(geojson, {
+            pointToLayer: (feature, latlng) => {
+              const rating = feature.properties["Rankig-0-100"];
+              const radius = rating >= 80 ? 9 : rating >= 60 ? 8 : rating >= 40 ? 7 : 6;
+              return L.circleMarker(latlng, {
+                radius,
+                fillColor: ratingColor(rating),
+                color: "#ffffff",
+                weight: 1.5,
+                opacity: 1,
+                fillOpacity: 0.88,
+              });
+            },
+            onEachFeature: (feature, layer) => {
+              layer.bindPopup(buildPopup(feature.properties), {
+                maxWidth: 300,
+                minWidth: 260,
+              });
+              layer.on("mouseover", function () { this.openPopup(); });
+            },
+          }).addTo(map);
+        });
+
+      mapInstanceRef.current = map;
+    };
+
+    if (window.L) {
+      init();
+    } else {
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.onload = init;
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []);
+
+  return (
+    <div className="dw-fade">
+      <div className="dw-section" style={{ paddingBottom: "24px" }}>
+        <p className="dw-eyebrow">Przykład danych</p>
+        <h2 className="dw-section-title" style={{ marginBottom: "12px" }}>
+          Próbka bazy POS — <em>Biedronka, wybrane lokalizacje</em>
+        </h2>
+        <p className="dw-map-info" style={{ padding: 0, maxWidth: "none" }}>
+          Poniżej 50 punktów sprzedaży z rzeczywistej bazy DataWise wraz z pełnym zestawem zmiennych.
+          Kolor markera odpowiada rankingowi potencjału (0–100). Kliknij lub najedź na punkt, aby zobaczyć wszystkie kolumny warstwy.
+        </p>
+      </div>
+
+      <div className="dw-map-legend">
+        <span className="dw-map-legend-title">Ranking 0–100:</span>
+        {LEGEND.map((l) => (
+          <span className="dw-legend-item" key={l.label}>
+            <span className="dw-legend-dot" style={{ background: l.color }} />
+            {l.label}
+          </span>
+        ))}
+      </div>
+
+      <div className="dw-map-wrap">
+        <div ref={mapRef} className="dw-map-container" />
       </div>
     </div>
   );
@@ -892,11 +1121,12 @@ export default function App() {
   const [active, setActive] = useState("baza");
 
   const panels = {
-    baza:    <TabBaza />,
-    zrodla:  <TabZrodla />,
-    pakiety: <TabPakiety />,
-    uzycia:  <TabUzycia />,
-    kontakt: <TabKontakt />,
+    baza:     <TabBaza />,
+    zrodla:   <TabZrodla />,
+    przyklad: <TabPrzyklad />,
+    pakiety:  <TabPakiety />,
+    uzycia:   <TabUzycia />,
+    kontakt:  <TabKontakt />,
   };
 
   return (
