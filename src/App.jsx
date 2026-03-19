@@ -58,6 +58,25 @@ const GLOBAL_CSS = `
     padding: 5px 14px; border-radius: 4px; text-transform: uppercase;
     border: 1px solid #C8D0E8;
   }
+  .dw-header-right {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  /* ── LANG SWITCH ─────────────────────────────────────────────────────────── */
+  .dw-lang-switch {
+    display: flex; align-items: center;
+    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+  }
+  .dw-lang-btn {
+    padding: 5px 11px; font-size: 11px; font-weight: 700;
+    background: none; border: none; cursor: pointer;
+    color: var(--mid); font-family: 'Manrope', sans-serif;
+    transition: background 0.15s, color 0.15s;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .dw-lang-btn + .dw-lang-btn { border-left: 1px solid var(--border); }
+  .dw-lang-btn.active { background: var(--blue); color: var(--white); }
+  .dw-lang-btn:not(.active):hover { background: var(--light); color: var(--text); }
 
   /* ── NAV ─────────────────────────────────────────────────────────────────── */
   .dw-nav {
@@ -522,6 +541,435 @@ const GLOBAL_CSS = `
 `;
 
 /* ─────────────────────────────────────────────────────────────────────────── */
+/*  TRANSLATIONS                                                                */
+/* ─────────────────────────────────────────────────────────────────────────── */
+const T = {
+  pl: {
+    badge: "Baza POS FMCG",
+    tabs: [
+      { id: "baza",     label: "Baza POS",        icon: "store" },
+      { id: "zrodla",   label: "Źródła danych",   icon: "hub" },
+      { id: "przyklad", label: "Przykład",         icon: "map" },
+      { id: "pakiety",  label: "Pakiety",          icon: "apps" },
+      { id: "uzycia",   label: "Zastosowania",     icon: "lightbulb" },
+      { id: "kontakt",  label: "Próbka & Kontakt", icon: "mail" },
+    ],
+    hero: {
+      label: "Produkt dostępny od ręki",
+      title: "Wszechstronny Univers Punktów Sprzedaży",
+      titleEm: "z danymi o potencjale otoczenia — dla rynku FMCG w Polsce",
+      sub: "Baza 135\u00a0000+ lokalizacji FMCG i HoReCa wzbogacona o dane przestrzenne, demograficzne, mobilne (T-Mobile) i transakcyjne (Visa). Gotowa do integracji z CRM i BI.",
+    },
+    stats: [
+      { val: "135", unit: "\u00a0000+", lbl: "Punktów sprzedaży FMCG" },
+      { val: "47",  unit: "\u00a0000+", lbl: "Lokali HoReCa" },
+      { val: "100", unit: "+",          lbl: "Sieci grocery" },
+    ],
+    baza: {
+      eyebrow: "Kategorie w bazie",
+      title: "Pełne pokrycie kanałów",
+      titleEm: "grocery i HoReCa",
+      avail: "Baza dostępna od ręki — gotowe pliki i API",
+    },
+    cats: [
+      { icon: "shopping_cart", name: "Supermarkety & Hipermarkety", sub: "sieci ogólnopolskie" },
+      { icon: "store",         name: "Sklepy spożywcze",            sub: "dyskont, convenience" },
+      { icon: "coffee",        name: "Kawiarnie & Café",            sub: "w tym sieci kawowe" },
+      { icon: "restaurant",    name: "Restauracje & Bary",          sub: "kanał on-trade" },
+      { icon: "fastfood",      name: "Fast-food & Puby",            sub: "QSR i gastro nieformalna" },
+      { icon: "storefront",    name: "Sieci detaliczne",            sub: "~100 sieci, 60k+ punktów" },
+    ],
+    zrodla: {
+      eyebrow: "Partnerzy danych",
+      title: "Trzy unikalne źródła",
+      titleEm: "w jednym produkcie",
+      note: "Jako jedyna firma w Polsce łączymy te trzy źródła w jednym produkcie — gotowym do integracji z systemami CRM i BI.",
+    },
+    sources: [
+      {
+        icon: "database", color: "#0A1F5C",
+        name: "DataWise", sub: "Własna baza przestrzenna",
+        items: [
+          "Populacja i demografia (GUS + modelowanie)",
+          "Konkurencja w otoczeniu — szczegółowa mapa rynku",
+          "Siła nabywcza i prognozy demograficzne",
+          "Generatory ruchu (biura, galerie, komunikacja)",
+        ],
+      },
+      {
+        icon: "cell_tower", color: "#003DA5",
+        name: "T-Mobile Big Data", sub: "Dane z sieci komórkowej",
+        items: [
+          "Ruch dzienny i tygodniowy w otoczeniu POS",
+          "Wskaźniki turystyki i przepływy sezonowe",
+          "Anonimowe przepływy ludności",
+          "Godziny szczytowe i profile tygodniowe",
+        ],
+      },
+      {
+        icon: "credit_card", color: "#1A1F71",
+        name: "Visa", sub: "Dane transakcyjne",
+        items: [
+          "Wydatki w kanałach (grocery, HoReCa, e-com…)",
+          "Wartość koszyka i częstotliwość zakupów",
+          "Segmenty klientów wg life-style",
+          "Zachowania i preferencje konsumentów",
+        ],
+      },
+    ],
+    przyklad: {
+      eyebrow: "Przykład danych",
+      title: "Próbka bazy POS —",
+      titleEm: "Biedronka, wybrane lokalizacje",
+      desc: "Poniżej 50 punktów sprzedaży z rzeczywistej bazy DataWise wraz z pełnym zestawem zmiennych. Kolor markera odpowiada rankingowi potencjału (0–100). Kliknij lub najedź na punkt, aby zobaczyć wszystkie kolumny warstwy.",
+      legendTitle: "Ranking 0–100:",
+    },
+    popup: {
+      rankLabel: "Ranking",
+      sectionBasic: "Podstawowe",
+      sectionLocation: "Lokalizacja",
+      sectionData: "Dane o otoczeniu",
+      fields: {
+        category: "Kategoria",
+        subcategory: "Podkategoria",
+        chain: "Sieć",
+        storeNo: "Numer sklepu",
+        municipalType: "Typ gminy",
+        inMall: "W centrum handlowym",
+        mallName: "Nazwa centrum",
+        mallFormat: "Format centrum",
+        inRetailPark: "W parku handlowym",
+        ranking: "Ranking (0–100)",
+        poi75: "POI w promieniu 75m",
+        discounters1km: "Dyskontów w promieniu 1km",
+        pop1km: "Ludność 1km",
+        popUnder14: "Populacja do 14 lat",
+        jobs1km: "Miejsca pracy 1km",
+        income: "Dochód per capita (zł)",
+        trafficIndex: "Indeks generatorów ruchu",
+      },
+    },
+    pakiety: {
+      eyebrow: "Oferta modułowa",
+      title: "5 pakietów danych —",
+      titleEm: "płacisz tylko za to, czego potrzebujesz",
+      flexNote: "Klient może wybrać dowolną kombinację pakietów i dokupować je w miarę potrzeb — brak konieczności zakupu całości.",
+    },
+    packages: [
+      {
+        icon: "group",
+        name: "BASIC", sub: "Fundament każdej analizy",
+        tags: ["Populacja", "Demografia", "Konkurencja"],
+        detail: "Dane demograficzne z rozkładem wiekowym i płciowym, liczba mieszkańców i pracujących w zasięgu POS (250m / 500m / 1km / 3km / 5km). Mapa konkurencji z typologią i odległościami. Idealny punkt startowy do segmentacji i priorytetyzacji sieci sprzedaży.",
+      },
+      {
+        icon: "map",
+        name: "COMPETITION", sub: "Szczegółowa mapa konkurencji",
+        tags: ["Konkurencja", "Generatory ruchu", "Otoczenie"],
+        detail: "Rozszerzona analiza konkurencji z typologią formatów i zasięgami izochron. Generatory ruchu: biura, centra handlowe, dworce, uczelnie, szpitale. Pozwala odpowiedzieć: co przyciąga klientów do danego POS?",
+      },
+      {
+        icon: "signal_cellular_alt",
+        name: "TRAFFIC", sub: "Ruch i zachowania przestrzenne",
+        tags: ["Ruch", "Turystyka", "T-Mobile"],
+        detail: "Dane z sieci komórkowej T-Mobile: liczba unikalnych użytkowników w zasięgu POS z podziałem na godziny i dni tygodnia, wskaźniki turystyki i sezonowości. Kluczowe dla decyzji o rozmieszczeniu chłodziarek i materiałów POS.",
+      },
+      {
+        icon: "payments",
+        name: "SPENDINGS", sub: "Wydatki i wartość koszyka",
+        tags: ["Wydatki", "Kanały", "Visa"],
+        detail: "Dane Visa: wolumen i wartość transakcji wg kategorii (grocery, horeca, e-com, stacje), średnia wartość koszyka, penetracja kart. Pomaga odpowiedzieć: gdzie są klienci z wysoką siłą nabywczą?",
+      },
+      {
+        icon: "person_search",
+        name: "LIFE-STYLE", sub: "Segmenty i styl życia",
+        tags: ["Segmenty", "Life-style", "Visa"],
+        detail: "Segmentacja konsumentów wg zachowań transakcyjnych Visa. Pozwala dopasować portfolio marek i mechanizmy promocyjne do realnych preferencji klientów w zasięgu POS.",
+      },
+    ],
+    uzycia: {
+      eyebrow: "Zastosowania",
+      title: "Kto i jak korzysta z danych?",
+      whyEyebrow: "Dlaczego DataWise",
+    },
+    useCases: [
+      {
+        icon: "bar_chart", dept: "Trade Marketing",
+        body: "Gdzie inwestować majątek trwały (lodówki, kasetony, nalewaki)? W których POS-ach priorytetyzować ekspozycję? Dane pozwalają odpowiadać na pytania numerycznie, a nie intuicyjnie.",
+        pills: ["Priorytety inwestycji", "Optymalizacja majątku", "Ekspozycja"],
+      },
+      {
+        icon: "star", dept: "Brand Management",
+        body: "Które marki promować w jakich POS-ach? Segmentacja otoczenia pozwala dopasować portfolio do profilu konsumenta — premium tam gdzie premium, value tam gdzie value.",
+        pills: ["Portfolio fit", "Segmentacja POS", "Dobór marki"],
+      },
+      {
+        icon: "local_shipping", dept: "Route to Market",
+        body: "Częstotliwość wizyt, priorytety i zadania dla sił terenowych. Optymalizacja tras i zasięgu dystrybutorów opartych o faktyczny potencjał, nie historię sprzedaży.",
+        pills: ["Optymalizacja tras", "Priorytety wizyt", "SFA / dystrybucja"],
+      },
+      {
+        icon: "trending_up", dept: "BI & Raportowanie",
+        body: "Wzbogacenie danych wewnętrznych (sprzedaż, dystrybucja) o kontekst przestrzenny. Benchmarking wyników vs. potencjał — wreszcie wiadomo, który POS jest pod-, a który nad-realizatorem.",
+        pills: ["Benchmarking", "Enrichment CRM", "Dashboard"],
+      },
+    ],
+    benefits: [
+      { icon: "bolt",      title: "Dostępna od ręki", sub: "Gotowe pliki + API — zero czasu na zbieranie" },
+      { icon: "extension", title: "Modularna oferta",  sub: "Kupujesz tylko potrzebne pakiety danych" },
+      { icon: "handshake", title: "Unikalne źródła",   sub: "DataWise + T-Mobile + Visa w jednym produkcie" },
+    ],
+    kontakt: {
+      eyebrow: "Próbka & Kontakt",
+      title: "Zainteresowany próbką danych?",
+      ctaTag: "Bezpłatna próbka",
+      ctaTitle: "Wyślemy Ci fragment bazy dla Twojej kategorii",
+      ctaSub: "Przygotujemy próbkę dopasowaną do Twojego sektora, portfolio marek i obszaru geograficznego.",
+      ctaItems: [
+        "Dane dostępne od ręki",
+        "Prezentacja i demo na żądanie",
+        "Bezpłatna próbka dla nowych klientów",
+        "Integracja z Twoim CRM / BI",
+      ],
+      formTitle: "Poproś o próbkę danych",
+      lblName: "Imię i Nazwisko *",
+      lblCompany: "Firma",
+      lblEmail: "Email *",
+      lblSector: "Sektor / kategoria",
+      placeholderName: "Jan Kowalski",
+      placeholderCompany: "Coca-Cola, PepsiCo, Maspex…",
+      placeholderEmail: "jan@firma.pl",
+      sectorDefault: "Wybierz…",
+      sectors: [
+        "Napoje bezalkoholowe",
+        "Piwo i alkohole",
+        "Wyroby tytoniowe",
+        "Lody i mrożonki",
+        "Kosmetyki / FMCG non-food",
+        "Retail / Sieci handlowe",
+        "Inne FMCG",
+      ],
+      submitBtn: "Wyślij zapytanie o próbkę →",
+      successTitle: "Dziękujemy!",
+      successSub: "Skontaktujemy się w ciągu 24h z próbką danych dopasowaną do Twojej kategorii.",
+    },
+    footer: "DataWise · Baza Punktów Sprzedaży FMCG · Polska",
+  },
+
+  en: {
+    badge: "FMCG POS Database",
+    tabs: [
+      { id: "baza",     label: "POS Database",    icon: "store" },
+      { id: "zrodla",   label: "Data Sources",     icon: "hub" },
+      { id: "przyklad", label: "Example",          icon: "map" },
+      { id: "pakiety",  label: "Packages",         icon: "apps" },
+      { id: "uzycia",   label: "Use Cases",        icon: "lightbulb" },
+      { id: "kontakt",  label: "Sample & Contact", icon: "mail" },
+    ],
+    hero: {
+      label: "Product ready to use",
+      title: "Comprehensive Universe of Points of Sale",
+      titleEm: "with surrounding potential data — for the Polish FMCG market",
+      sub: "A database of 135\u00a0000+ FMCG and HoReCa locations enriched with spatial, demographic, mobile (T-Mobile) and transactional (Visa) data. Ready to integrate with CRM and BI.",
+    },
+    stats: [
+      { val: "135", unit: "\u00a0000+", lbl: "FMCG Points of Sale" },
+      { val: "47",  unit: "\u00a0000+", lbl: "HoReCa Venues" },
+      { val: "100", unit: "+",          lbl: "Grocery Chains" },
+    ],
+    baza: {
+      eyebrow: "Categories in the database",
+      title: "Full channel coverage",
+      titleEm: "grocery & HoReCa",
+      avail: "Database ready to use — files and API",
+    },
+    cats: [
+      { icon: "shopping_cart", name: "Supermarkets & Hypermarkets", sub: "nationwide chains" },
+      { icon: "store",         name: "Grocery Stores",              sub: "discount, convenience" },
+      { icon: "coffee",        name: "Coffee Shops & Cafés",        sub: "including coffee chains" },
+      { icon: "restaurant",    name: "Restaurants & Bars",          sub: "on-trade channel" },
+      { icon: "fastfood",      name: "Fast Food & Pubs",            sub: "QSR and informal gastro" },
+      { icon: "storefront",    name: "Retail Chains",               sub: "~100 chains, 60k+ locations" },
+    ],
+    zrodla: {
+      eyebrow: "Data partners",
+      title: "Three unique sources",
+      titleEm: "in one product",
+      note: "We are the only company in Poland combining these three sources in a single product — ready to integrate with CRM and BI systems.",
+    },
+    sources: [
+      {
+        icon: "database", color: "#0A1F5C",
+        name: "DataWise", sub: "Proprietary Spatial Database",
+        items: [
+          "Population & demographics (CSO + modeling)",
+          "Competitive landscape — detailed market map",
+          "Purchasing power & demographic forecasts",
+          "Traffic generators (offices, malls, transit)",
+        ],
+      },
+      {
+        icon: "cell_tower", color: "#003DA5",
+        name: "T-Mobile Big Data", sub: "Mobile Network Data",
+        items: [
+          "Daily & weekly footfall around POS",
+          "Tourism indicators & seasonal flows",
+          "Anonymous population flows",
+          "Peak hours & weekly profiles",
+        ],
+      },
+      {
+        icon: "credit_card", color: "#1A1F71",
+        name: "Visa", sub: "Transaction Data",
+        items: [
+          "Channel spending (grocery, HoReCa, e-com…)",
+          "Basket value & purchase frequency",
+          "Customer segments by lifestyle",
+          "Consumer behavior & preferences",
+        ],
+      },
+    ],
+    przyklad: {
+      eyebrow: "Data example",
+      title: "POS database sample —",
+      titleEm: "Biedronka, selected locations",
+      desc: "Below are 50 points of sale from the real DataWise database with the full set of variables. Marker color corresponds to the potential ranking (0–100). Click or hover over a point to see all layer columns.",
+      legendTitle: "Ranking 0–100:",
+    },
+    popup: {
+      rankLabel: "Ranking",
+      sectionBasic: "Basic",
+      sectionLocation: "Location",
+      sectionData: "Surroundings data",
+      fields: {
+        category: "Category",
+        subcategory: "Subcategory",
+        chain: "Chain",
+        storeNo: "Store number",
+        municipalType: "Municipality type",
+        inMall: "In shopping centre",
+        mallName: "Centre name",
+        mallFormat: "Centre format",
+        inRetailPark: "In retail park",
+        ranking: "Ranking (0–100)",
+        poi75: "POI within 75m",
+        discounters1km: "Discounters within 1km",
+        pop1km: "Population 1km",
+        popUnder14: "Population under 14",
+        jobs1km: "Jobs within 1km",
+        income: "Disposable income per capita (PLN)",
+        trafficIndex: "Traffic generator index",
+      },
+    },
+    pakiety: {
+      eyebrow: "Modular offer",
+      title: "5 data packages —",
+      titleEm: "pay only for what you need",
+      flexNote: "Clients can choose any combination of packages and add more as needed — no obligation to buy the full suite.",
+    },
+    packages: [
+      {
+        icon: "group",
+        name: "BASIC", sub: "Foundation of every analysis",
+        tags: ["Population", "Demographics", "Competition"],
+        detail: "Demographic data with age and gender breakdown, number of residents and workers within POS catchment (250m / 500m / 1km / 3km / 5km). Competitive map with typology and distances. The ideal starting point for network segmentation and prioritization.",
+      },
+      {
+        icon: "map",
+        name: "COMPETITION", sub: "Detailed competitive map",
+        tags: ["Competition", "Traffic Generators", "Surroundings"],
+        detail: "Extended competitive analysis with format typology and isochrone catchments. Traffic generators: offices, shopping centres, railway stations, universities, hospitals. Answers the key question: what draws customers to a given POS?",
+      },
+      {
+        icon: "signal_cellular_alt",
+        name: "TRAFFIC", sub: "Footfall & spatial behavior",
+        tags: ["Traffic", "Tourism", "T-Mobile"],
+        detail: "T-Mobile mobile network data: number of unique users within POS catchment broken down by hour and day of week, tourism and seasonality indicators. Critical for decisions on cooler and POS material placement.",
+      },
+      {
+        icon: "payments",
+        name: "SPENDINGS", sub: "Spending & basket value",
+        tags: ["Spending", "Channels", "Visa"],
+        detail: "Visa data: transaction volume and value by category (grocery, horeca, e-com, fuel stations), average basket value, card penetration. Helps answer: where are the high-purchasing-power customers?",
+      },
+      {
+        icon: "person_search",
+        name: "LIFE-STYLE", sub: "Segments & lifestyle",
+        tags: ["Segments", "Lifestyle", "Visa"],
+        detail: "Consumer segmentation based on Visa transaction behavior. Enables matching brand portfolio and promotional mechanics to the actual preferences of customers within POS catchment.",
+      },
+    ],
+    uzycia: {
+      eyebrow: "Use cases",
+      title: "Who uses the data and how?",
+      whyEyebrow: "Why DataWise",
+    },
+    useCases: [
+      {
+        icon: "bar_chart", dept: "Trade Marketing",
+        body: "Where to invest fixed assets (coolers, lightboxes, taps)? Which POS locations should get priority exposure? Data lets you answer these questions with numbers, not intuition.",
+        pills: ["Investment priorities", "Asset optimization", "Exposure"],
+      },
+      {
+        icon: "star", dept: "Brand Management",
+        body: "Which brands to promote in which POS locations? Surroundings segmentation lets you match portfolio to consumer profile — premium where premium belongs, value where value fits.",
+        pills: ["Portfolio fit", "POS segmentation", "Brand matching"],
+      },
+      {
+        icon: "local_shipping", dept: "Route to Market",
+        body: "Visit frequency, priorities and tasks for field forces. Route and distributor coverage optimization based on actual potential, not sales history.",
+        pills: ["Route optimization", "Visit priorities", "SFA / distribution"],
+      },
+      {
+        icon: "trending_up", dept: "BI & Reporting",
+        body: "Enriching internal data (sales, distribution) with spatial context. Performance benchmarking vs. potential — finally knowing which POS is under- and which is over-performing.",
+        pills: ["Benchmarking", "CRM enrichment", "Dashboard"],
+      },
+    ],
+    benefits: [
+      { icon: "bolt",      title: "Ready to use",     sub: "Ready files + API — zero time on data collection" },
+      { icon: "extension", title: "Modular offer",     sub: "Buy only the data packages you need" },
+      { icon: "handshake", title: "Unique sources",    sub: "DataWise + T-Mobile + Visa in one product" },
+    ],
+    kontakt: {
+      eyebrow: "Sample & Contact",
+      title: "Interested in a data sample?",
+      ctaTag: "Free sample",
+      ctaTitle: "We will send you a database extract for your category",
+      ctaSub: "We will prepare a sample tailored to your sector, brand portfolio and geographic area.",
+      ctaItems: [
+        "Data available immediately",
+        "Presentation and demo on request",
+        "Free sample for new clients",
+        "Integration with your CRM / BI",
+      ],
+      formTitle: "Request a data sample",
+      lblName: "Full name *",
+      lblCompany: "Company",
+      lblEmail: "Email *",
+      lblSector: "Sector / category",
+      placeholderName: "John Smith",
+      placeholderCompany: "Coca-Cola, PepsiCo, Heineken…",
+      placeholderEmail: "john@company.com",
+      sectorDefault: "Select…",
+      sectors: [
+        "Soft drinks",
+        "Beer & spirits",
+        "Tobacco products",
+        "Ice cream & frozen food",
+        "Cosmetics / FMCG non-food",
+        "Retail / Grocery chains",
+        "Other FMCG",
+      ],
+      submitBtn: "Send sample request →",
+      successTitle: "Thank you!",
+      successSub: "We will get back to you within 24h with a data sample tailored to your category.",
+    },
+    footer: "DataWise · FMCG Points of Sale Database · Poland",
+  },
+};
+
+/* ─────────────────────────────────────────────────────────────────────────── */
 /*  ICON COMPONENT                                                              */
 /* ─────────────────────────────────────────────────────────────────────────── */
 function Icon({ name, size = 20, style = {} }) {
@@ -536,151 +984,93 @@ function Icon({ name, size = 20, style = {} }) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────── */
-/*  DATA                                                                        */
+/*  MAP HELPERS                                                                 */
 /* ─────────────────────────────────────────────────────────────────────────── */
+const ratingColor = (r) => {
+  if (r == null) return "#8AA8CC";
+  if (r >= 80) return "#0A1F5C";
+  if (r >= 60) return "#1A3A7A";
+  if (r >= 40) return "#2E5CA8";
+  return "#6B8EC4";
+};
 
-const STATS = [
-  { val: "135", unit: " 000+", lbl: "Punktów sprzedaży FMCG" },
-  { val: "47",  unit: " 000+", lbl: "Lokali HoReCa" },
-  { val: "100", unit: "+",     lbl: "Sieci grocery" },
+const LEGEND = [
+  { label: "80–100", color: "#0A1F5C" },
+  { label: "60–79",  color: "#1A3A7A" },
+  { label: "40–59",  color: "#2E5CA8" },
+  { label: "0–39",   color: "#6B8EC4" },
 ];
 
-const CATS = [
-  { icon: "shopping_cart",    name: "Supermarkety & Hipermarkety", sub: "sieci ogólnopolskie" },
-  { icon: "store",            name: "Sklepy spożywcze",            sub: "dyskont, convenience" },
-  { icon: "coffee",           name: "Kawiarnie & Café",            sub: "w tym sieci kawowe" },
-  { icon: "restaurant",       name: "Restauracje & Bary",          sub: "kanał on-trade" },
-  { icon: "fastfood",         name: "Fast-food & Puby",            sub: "QSR i gastro nieformalna" },
-  { icon: "storefront",       name: "Sieci detaliczne",            sub: "~100 sieci, 60k+ punktów" },
-];
+const buildPopup = (p, pt) => {
+  const addr = `${p["Prefix"] || ""} ${p["Ulica"] || ""} ${p["Nr Ulicy"] || ""}, ${p["Kod pocztowy"] || ""} ${p["Miejscowość"] || ""}`.trim();
+  const f = pt.fields;
 
-const SOURCES = [
-  {
-    icon: "database", color: "#0A1F5C",
-    name: "DataWise", sub: "Własna baza przestrzenna",
-    items: [
-      "Populacja i demografia (GUS + modelowanie)",
-      "Konkurencja w otoczeniu — szczegółowa mapa rynku",
-      "Siła nabywcza i prognozy demograficzne",
-      "Generatory ruchu (biura, galerie, komunikacja)",
-    ],
-  },
-  {
-    icon: "cell_tower", color: "#003DA5",
-    name: "T-Mobile Big Data", sub: "Dane z sieci komórkowej",
-    items: [
-      "Ruch dzienny i tygodniowy w otoczeniu POS",
-      "Wskaźniki turystyki i przepływy sezonowe",
-      "Anonimowe przepływy ludności",
-      "Godziny szczytowe i profile tygodniowe",
-    ],
-  },
-  {
-    icon: "credit_card", color: "#1A1F71",
-    name: "Visa", sub: "Dane transakcyjne",
-    items: [
-      "Wydatki w kanałach (grocery, HoReCa, e-com…)",
-      "Wartość koszyka i częstotliwość zakupów",
-      "Segmenty klientów wg life-style",
-      "Zachowania i preferencje konsumentów",
-    ],
-  },
-];
+  const basic = [
+    [f.category,     p["Kategoria"]],
+    [f.subcategory,  p["Podkategoria"]],
+    [f.chain,        p["Sieć"]],
+    [f.storeNo,      p["Numer sklepu"]],
+    [f.municipalType,p["Typ gminy"]],
+  ];
 
-const PACKAGES = [
-  {
-    icon: "group",
-    name: "BASIC", sub: "Fundament każdej analizy",
-    tags: ["Populacja", "Demografia", "Konkurencja"],
-    detail: "Dane demograficzne z rozkładem wiekowym i płciowym, liczba mieszkańców i pracujących w zasięgu POS (250m / 500m / 1km / 3km / 5km). Mapa konkurencji z typologią i odległościami. Idealny punkt startowy do segmentacji i priorytetyzacji sieci sprzedaży.",
-  },
-  {
-    icon: "map",
-    name: "COMPETITION", sub: "Szczegółowa mapa konkurencji",
-    tags: ["Konkurencja", "Generatory ruchu", "Otoczenie"],
-    detail: "Rozszerzona analiza konkurencji z typologią formatów i zasięgami izochron. Generatory ruchu: biura, centra handlowe, dworce, uczelnie, szpitale. Pozwala odpowiedzieć: co przyciąga klientów do danego POS?",
-  },
-  {
-    icon: "signal_cellular_alt",
-    name: "TRAFFIC", sub: "Ruch i zachowania przestrzenne",
-    tags: ["Ruch", "Turystyka", "T-Mobile"],
-    detail: "Dane z sieci komórkowej T-Mobile: liczba unikalnych użytkowników w zasięgu POS z podziałem na godziny i dni tygodnia, wskaźniki turystyki i sezonowości. Kluczowe dla decyzji o rozmieszczeniu chłodziarek i materiałów POS.",
-  },
-  {
-    icon: "payments",
-    name: "SPENDINGS", sub: "Wydatki i wartość koszyka",
-    tags: ["Wydatki", "Kanały", "Visa"],
-    detail: "Dane Visa: wolumen i wartość transakcji wg kategorii (grocery, horeca, e-com, stacje), średnia wartość koszyka, penetracja kart. Pomaga odpowiedzieć: gdzie są klienci z wysoką siłą nabywczą?",
-  },
-  {
-    icon: "person_search",
-    name: "LIFE-STYLE", sub: "Segmenty i styl życia",
-    tags: ["Segmenty", "Life-style", "Visa"],
-    detail: "Segmentacja konsumentów wg zachowań transakcyjnych Visa. Pozwala dopasować portfolio marek i mechanizmy promocyjne do realnych preferencji klientów w zasięgu POS.",
-  },
-];
+  const location = [
+    [f.inMall,       p["Lokalizacja w centrum handl."]],
+    [f.mallName,     p["Nazwa centrum"]],
+    [f.mallFormat,   p["Format centrum"]],
+    [f.inRetailPark, p["Lokalizacja w parku handl."]],
+  ].filter(([, v]) => v !== null && v !== undefined);
 
-const USE_CASES = [
-  {
-    icon: "bar_chart", dept: "Trade Marketing",
-    body: "Gdzie inwestować majątek trwały (lodówki, kasetony, nalewaki)? W których POS-ach priorytetyzować ekspozycję? Dane pozwalają odpowiadać na pytania numerycznie, a nie intuicyjnie.",
-    pills: ["Priorytety inwestycji", "Optymalizacja majątku", "Ekspozycja"],
-  },
-  {
-    icon: "star", dept: "Brand Management",
-    body: "Które marki promować w jakich POS-ach? Segmentacja otoczenia pozwala dopasować portfolio do profilu konsumenta — premium tam gdzie premium, value tam gdzie value.",
-    pills: ["Portfolio fit", "Segmentacja POS", "Dobór marki"],
-  },
-  {
-    icon: "local_shipping", dept: "Route to Market",
-    body: "Częstotliwość wizyt, priorytety i zadania dla sił terenowych. Optymalizacja tras i zasięgu dystrybutorów opartych o faktyczny potencjał, nie historię sprzedaży.",
-    pills: ["Optymalizacja tras", "Priorytety wizyt", "SFA / dystrybucja"],
-  },
-  {
-    icon: "trending_up", dept: "BI & Raportowanie",
-    body: "Wzbogacenie danych wewnętrznych (sprzedaż, dystrybucja) o kontekst przestrzenny. Benchmarking wyników vs. potencjał — wreszcie wiadomo, który POS jest pod-, a który nad-realizatorem.",
-    pills: ["Benchmarking", "Enrichment CRM", "Dashboard"],
-  },
-];
+  const data = [
+    [f.ranking,        p["Rankig-0-100"]],
+    [f.poi75,          p["Liczba POI w promieniu 75m"]],
+    [f.discounters1km, p["Liczba innych dyskontów w promieniu 1km"]],
+    [f.pop1km,         p["Liczba ludności 1km"]?.toLocaleString("pl-PL")],
+    [f.popUnder14,     p["Odsetek populacji w wieku do 14 lat"]],
+    [f.jobs1km,        p["Liczba miejsc pracy w promieniu 1km"]?.toLocaleString("pl-PL")],
+    [f.income,         p["Dochod rozporzadzalny per capita"]?.toLocaleString("pl-PL")],
+    [f.trafficIndex,   p["Indeks koncentracji generatorów ruchu"]],
+  ].filter(([, v]) => v !== null && v !== undefined);
 
-const BENEFITS = [
-  { icon: "bolt",      title: "Dostępna od ręki", sub: "Gotowe pliki + API — zero czasu na zbieranie" },
-  { icon: "extension", title: "Modularna oferta",  sub: "Kupujesz tylko potrzebne pakiety danych" },
-  { icon: "handshake", title: "Unikalne źródła",   sub: "DataWise + T-Mobile + Visa w jednym produkcie" },
-];
+  const rows = (arr) => arr.map(([k, v]) =>
+    `<div class="dw-popup-row"><span class="dw-popup-key">${k}</span><span class="dw-popup-val">${v}</span></div>`
+  ).join("");
 
-const TABS = [
-  { id: "baza",     label: "Baza POS",        icon: "store" },
-  { id: "zrodla",   label: "Źródła danych",   icon: "hub" },
-  { id: "przyklad", label: "Przykład",         icon: "map" },
-  { id: "pakiety",  label: "Pakiety",          icon: "apps" },
-  { id: "uzycia",   label: "Zastosowania",     icon: "lightbulb" },
-  { id: "kontakt",  label: "Próbka & Kontakt", icon: "mail" },
-];
+  return `
+    <div class="dw-popup-head">
+      <div class="dw-popup-name">${p["Sieć"]} #${p["Numer sklepu"]}</div>
+      <div class="dw-popup-addr">${addr}</div>
+      <div class="dw-popup-rank">${pt.rankLabel}: ${p["Rankig-0-100"] ?? "–"} / 100</div>
+    </div>
+    <div class="dw-popup-body">
+      <div class="dw-popup-section">${pt.sectionBasic}</div>
+      ${rows(basic)}
+      ${location.length ? `<div class="dw-popup-section">${pt.sectionLocation}</div>${rows(location)}` : ""}
+      <div class="dw-popup-section">${pt.sectionData}</div>
+      ${rows(data)}
+    </div>
+  `;
+};
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 /*  TAB COMPONENTS                                                              */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
-function TabBaza() {
+function TabBaza({ t }) {
   return (
     <>
       <div className="dw-hero">
         <div className="dw-hero-inner">
           <div className="dw-hero-label dw-fade">
             <span className="dw-hero-ldot" />
-            Produkt dostępny od ręki
+            {t.hero.label}
           </div>
           <h1 className="dw-hero-title dw-fade1">
-            Wszechstronny Univers Punktów Sprzedaży
-            <em>z danymi o potencjale otoczenia — dla rynku FMCG w Polsce</em>
+            {t.hero.title}
+            <em>{t.hero.titleEm}</em>
           </h1>
-          <p className="dw-hero-sub dw-fade2">
-            Baza 135&nbsp;000+ lokalizacji FMCG i HoReCa wzbogacona o dane przestrzenne,
-            demograficzne, mobilne (T-Mobile) i transakcyjne (Visa). Gotowa do integracji z CRM i BI.
-          </p>
+          <p className="dw-hero-sub dw-fade2">{t.hero.sub}</p>
           <div className="dw-hero-stats dw-fade3">
-            {STATS.map((s) => (
+            {t.stats.map((s) => (
               <div className="dw-hstat" key={s.lbl}>
                 <div className="dw-hstat-val">
                   {s.val}<span className="accent">{s.unit}</span>
@@ -693,13 +1083,13 @@ function TabBaza() {
       </div>
 
       <div className="dw-section">
-        <p className="dw-eyebrow dw-fade">Kategorie w bazie</p>
+        <p className="dw-eyebrow dw-fade">{t.baza.eyebrow}</p>
         <h2 className="dw-section-title dw-fade1">
-          Pełne pokrycie kanałów<br />
-          <em>grocery i HoReCa</em>
+          {t.baza.title}<br />
+          <em>{t.baza.titleEm}</em>
         </h2>
         <div className="dw-cats">
-          {CATS.map((c) => (
+          {t.cats.map((c) => (
             <div className="dw-cat" key={c.name}>
               <div className="dw-cat-ico">
                 <Icon name={c.icon} size={20} />
@@ -713,23 +1103,23 @@ function TabBaza() {
         </div>
         <div className="dw-avail dw-fade">
           <div className="dw-dot" />
-          Baza dostępna od ręki — gotowe pliki i API
+          {t.baza.avail}
         </div>
       </div>
     </>
   );
 }
 
-function TabZrodla() {
+function TabZrodla({ t }) {
   return (
     <div className="dw-section">
-      <p className="dw-eyebrow dw-fade">Partnerzy danych</p>
+      <p className="dw-eyebrow dw-fade">{t.zrodla.eyebrow}</p>
       <h2 className="dw-section-title dw-fade1">
-        Trzy unikalne źródła<br />
-        <em>w jednym produkcie</em>
+        {t.zrodla.title}<br />
+        <em>{t.zrodla.titleEm}</em>
       </h2>
       <div className="dw-sources">
-        {SOURCES.map((s) => (
+        {t.sources.map((s) => (
           <div className="dw-src" key={s.name}>
             <div className="dw-src-head">
               <div className="dw-src-ico" style={{ color: s.color }}>
@@ -753,84 +1143,18 @@ function TabZrodla() {
       </div>
       <div className="dw-note dw-fade">
         <Icon name="emoji_events" size={22} style={{ color: "#D4A020", flexShrink: 0 }} />
-        Jako jedyna firma w Polsce łączymy te trzy źródła w jednym produkcie — gotowym do integracji z systemami CRM i BI.
+        {t.zrodla.note}
       </div>
     </div>
   );
 }
 
-/* ── rating → marker color ── */
-const ratingColor = (r) => {
-  if (r == null) return "#8AA8CC";
-  if (r >= 80) return "#0A1F5C";
-  if (r >= 60) return "#1A3A7A";
-  if (r >= 40) return "#2E5CA8";
-  return "#6B8EC4";
-};
-
-const LEGEND = [
-  { label: "80–100",  color: "#0A1F5C" },
-  { label: "60–79",   color: "#1A3A7A" },
-  { label: "40–59",   color: "#2E5CA8" },
-  { label: "0–39",    color: "#6B8EC4" },
-];
-
-/* ── popup HTML helper ── */
-const buildPopup = (p) => {
-  const addr = `${p["Prefix"] || ""} ${p["Ulica"] || ""} ${p["Nr Ulicy"] || ""}, ${p["Kod pocztowy"] || ""} ${p["Miejscowość"] || ""}`.trim();
-
-  const basic = [
-    ["Kategoria", p["Kategoria"]],
-    ["Podkategoria", p["Podkategoria"]],
-    ["Sieć", p["Sieć"]],
-    ["Numer sklepu", p["Numer sklepu"]],
-    ["Typ gminy", p["Typ gminy"]],
-  ];
-
-  const location = [
-    ["W centrum handlowym", p["Lokalizacja w centrum handl."]],
-    ["Nazwa centrum", p["Nazwa centrum"]],
-    ["Format centrum", p["Format centrum"]],
-    ["W parku handlowym", p["Lokalizacja w parku handl."]],
-  ].filter(([, v]) => v !== null && v !== undefined);
-
-  const data = [
-    ["Ranking (0–100)", p["Rankig-0-100"]],
-    ["POI w promieniu 75m", p["Liczba POI w promieniu 75m"]],
-    ["Dyskontów w promieniu 1km", p["Liczba innych dyskontów w promieniu 1km"]],
-    ["Ludność 1km", p["Liczba ludności 1km"]?.toLocaleString("pl-PL")],
-    ["Populacja do 14 lat", p["Odsetek populacji w wieku do 14 lat"]],
-    ["Miejsca pracy 1km", p["Liczba miejsc pracy w promieniu 1km"]?.toLocaleString("pl-PL")],
-    ["Dochód per capita (zł)", p["Dochod rozporzadzalny per capita"]?.toLocaleString("pl-PL")],
-    ["Indeks generatorów ruchu", p["Indeks koncentracji generatorów ruchu"]],
-  ].filter(([, v]) => v !== null && v !== undefined);
-
-  const rows = (arr) => arr.map(([k, v]) =>
-    `<div class="dw-popup-row"><span class="dw-popup-key">${k}</span><span class="dw-popup-val">${v}</span></div>`
-  ).join("");
-
-  return `
-    <div class="dw-popup-head">
-      <div class="dw-popup-name">${p["Sieć"]} #${p["Numer sklepu"]}</div>
-      <div class="dw-popup-addr">${addr}</div>
-      <div class="dw-popup-rank">Ranking: ${p["Rankig-0-100"] ?? "–"} / 100</div>
-    </div>
-    <div class="dw-popup-body">
-      <div class="dw-popup-section">Podstawowe</div>
-      ${rows(basic)}
-      ${location.length ? `<div class="dw-popup-section">Lokalizacja</div>${rows(location)}` : ""}
-      <div class="dw-popup-section">Dane o otoczeniu</div>
-      ${rows(data)}
-    </div>
-  `;
-};
-
-function TabPrzyklad() {
+function TabPrzyklad({ t }) {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
+  const popupT = t.popup;
 
   useEffect(() => {
-    /* inject Leaflet CSS once */
     if (!document.getElementById("lf-css")) {
       const link = document.createElement("link");
       link.id = "lf-css";
@@ -868,7 +1192,7 @@ function TabPrzyklad() {
               });
             },
             onEachFeature: (feature, layer) => {
-              layer.bindPopup(buildPopup(feature.properties), {
+              layer.bindPopup(buildPopup(feature.properties, popupT), {
                 maxWidth: 300,
                 minWidth: 260,
               });
@@ -900,18 +1224,17 @@ function TabPrzyklad() {
   return (
     <div className="dw-fade">
       <div className="dw-section" style={{ paddingBottom: "24px" }}>
-        <p className="dw-eyebrow">Przykład danych</p>
+        <p className="dw-eyebrow">{t.przyklad.eyebrow}</p>
         <h2 className="dw-section-title" style={{ marginBottom: "12px" }}>
-          Próbka bazy POS — <em>Biedronka, wybrane lokalizacje</em>
+          {t.przyklad.title} <em>{t.przyklad.titleEm}</em>
         </h2>
         <p className="dw-map-info" style={{ padding: 0, maxWidth: "none" }}>
-          Poniżej 50 punktów sprzedaży z rzeczywistej bazy DataWise wraz z pełnym zestawem zmiennych.
-          Kolor markera odpowiada rankingowi potencjału (0–100). Kliknij lub najedź na punkt, aby zobaczyć wszystkie kolumny warstwy.
+          {t.przyklad.desc}
         </p>
       </div>
 
       <div className="dw-map-legend">
-        <span className="dw-map-legend-title">Ranking 0–100:</span>
+        <span className="dw-map-legend-title">{t.przyklad.legendTitle}</span>
         {LEGEND.map((l) => (
           <span className="dw-legend-item" key={l.label}>
             <span className="dw-legend-dot" style={{ background: l.color }} />
@@ -927,19 +1250,19 @@ function TabPrzyklad() {
   );
 }
 
-function TabPakiety() {
+function TabPakiety({ t }) {
   const [open, setOpen] = useState(null);
   const toggle = (name) => setOpen((prev) => (prev === name ? null : name));
 
   return (
     <div className="dw-section">
-      <p className="dw-eyebrow dw-fade">Oferta modułowa</p>
+      <p className="dw-eyebrow dw-fade">{t.pakiety.eyebrow}</p>
       <h2 className="dw-section-title dw-fade1">
-        5 pakietów danych —<br />
-        <em>płacisz tylko za to, czego potrzebujesz</em>
+        {t.pakiety.title}<br />
+        <em>{t.pakiety.titleEm}</em>
       </h2>
       <div className="dw-pkgs">
-        {PACKAGES.map((p) => (
+        {t.packages.map((p) => (
           <div
             key={p.name}
             className={`dw-pkg${open === p.name ? " open" : ""}`}
@@ -953,7 +1276,7 @@ function TabPakiety() {
               <div className="dw-pkg-sub">{p.sub}</div>
             </div>
             <div className="dw-tags">
-              {p.tags.map((t) => <span className="dw-tag" key={t}>{t}</span>)}
+              {p.tags.map((tag) => <span className="dw-tag" key={tag}>{tag}</span>)}
             </div>
             <div className="dw-chevron">
               <Icon name="expand_more" size={20} />
@@ -964,20 +1287,18 @@ function TabPakiety() {
           </div>
         ))}
       </div>
-      <div className="dw-flex-note dw-fade">
-        Klient może wybrać dowolną kombinację pakietów i dokupować je w miarę potrzeb — brak konieczności zakupu całości.
-      </div>
+      <div className="dw-flex-note dw-fade">{t.pakiety.flexNote}</div>
     </div>
   );
 }
 
-function TabUzycia() {
+function TabUzycia({ t }) {
   return (
     <div className="dw-section">
-      <p className="dw-eyebrow dw-fade">Zastosowania</p>
-      <h2 className="dw-section-title dw-fade1">Kto i jak korzysta z danych?</h2>
+      <p className="dw-eyebrow dw-fade">{t.uzycia.eyebrow}</p>
+      <h2 className="dw-section-title dw-fade1">{t.uzycia.title}</h2>
       <div className="dw-uses">
-        {USE_CASES.map((u) => (
+        {t.useCases.map((u) => (
           <div className="dw-use" key={u.dept}>
             <div className="dw-use-head">
               <div className="dw-use-ico">
@@ -992,9 +1313,9 @@ function TabUzycia() {
           </div>
         ))}
       </div>
-      <p className="dw-eyebrow" style={{ marginBottom: "14px" }}>Dlaczego DataWise</p>
+      <p className="dw-eyebrow" style={{ marginBottom: "14px" }}>{t.uzycia.whyEyebrow}</p>
       <div className="dw-benefits">
-        {BENEFITS.map((b) => (
+        {t.benefits.map((b) => (
           <div className="dw-ben" key={b.title}>
             <div className="dw-ben-ico">
               <Icon name={b.icon} size={20} />
@@ -1010,30 +1331,24 @@ function TabUzycia() {
   );
 }
 
-function TabKontakt() {
+function TabKontakt({ t }) {
+  const k = t.kontakt;
   const [form, setForm] = useState({ name: "", company: "", email: "", sector: "" });
   const [sent, setSent] = useState(false);
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
   const valid = form.name.trim() && form.email.includes("@");
 
   return (
     <div className="dw-section">
-      <p className="dw-eyebrow dw-fade">Próbka & Kontakt</p>
-      <h2 className="dw-section-title dw-fade1">Zainteresowany próbką danych?</h2>
+      <p className="dw-eyebrow dw-fade">{k.eyebrow}</p>
+      <h2 className="dw-section-title dw-fade1">{k.title}</h2>
       <div className="dw-contact">
         <div className="dw-cta dw-fade">
-          <div className="dw-cta-tag">Bezpłatna próbka</div>
-          <div className="dw-cta-title">Wyślemy Ci fragment bazy dla Twojej kategorii</div>
-          <div className="dw-cta-sub">
-            Przygotujemy próbkę dopasowaną do Twojego sektora, portfolio marek i obszaru geograficznego.
-          </div>
+          <div className="dw-cta-tag">{k.ctaTag}</div>
+          <div className="dw-cta-title">{k.ctaTitle}</div>
+          <div className="dw-cta-sub">{k.ctaSub}</div>
           <div className="dw-cta-list">
-            {[
-              "Dane dostępne od ręki",
-              "Prezentacja i demo na żądanie",
-              "Bezpłatna próbka dla nowych klientów",
-              "Integracja z Twoim CRM / BI",
-            ].map((b) => (
+            {k.ctaItems.map((b) => (
               <div className="dw-cta-item" key={b}>
                 <div className="dw-cta-chk">
                   <Icon name="check" size={13} />
@@ -1054,41 +1369,33 @@ function TabKontakt() {
               <div className="dw-success-ico">
                 <Icon name="check_circle" size={52} />
               </div>
-              <div className="dw-success-title">Dziękujemy!</div>
-              <div className="dw-success-sub">
-                Skontaktujemy się w ciągu 24h z próbką danych dopasowaną do Twojej kategorii.
-              </div>
+              <div className="dw-success-title">{k.successTitle}</div>
+              <div className="dw-success-sub">{k.successSub}</div>
             </div>
           ) : (
             <>
-              <div className="dw-form-title">Poproś o próbkę danych</div>
+              <div className="dw-form-title">{k.formTitle}</div>
               <div className="dw-form-row">
-                <label className="dw-form-lbl">Imię i Nazwisko *</label>
-                <input className="dw-form-input" placeholder="Jan Kowalski" value={form.name} onChange={set("name")} />
+                <label className="dw-form-lbl">{k.lblName}</label>
+                <input className="dw-form-input" placeholder={k.placeholderName} value={form.name} onChange={set("name")} />
               </div>
               <div className="dw-form-row">
-                <label className="dw-form-lbl">Firma</label>
-                <input className="dw-form-input" placeholder="Coca-Cola, PepsiCo, Maspex…" value={form.company} onChange={set("company")} />
+                <label className="dw-form-lbl">{k.lblCompany}</label>
+                <input className="dw-form-input" placeholder={k.placeholderCompany} value={form.company} onChange={set("company")} />
               </div>
               <div className="dw-form-row">
-                <label className="dw-form-lbl">Email *</label>
-                <input className="dw-form-input" type="email" placeholder="jan@firma.pl" value={form.email} onChange={set("email")} />
+                <label className="dw-form-lbl">{k.lblEmail}</label>
+                <input className="dw-form-input" type="email" placeholder={k.placeholderEmail} value={form.email} onChange={set("email")} />
               </div>
               <div className="dw-form-row">
-                <label className="dw-form-lbl">Sektor / kategoria</label>
+                <label className="dw-form-lbl">{k.lblSector}</label>
                 <select className="dw-form-select" value={form.sector} onChange={set("sector")}>
-                  <option value="">Wybierz…</option>
-                  <option>Napoje bezalkoholowe</option>
-                  <option>Piwo i alkohole</option>
-                  <option>Wyroby tytoniowe</option>
-                  <option>Lody i mrożonki</option>
-                  <option>Kosmetyki / FMCG non-food</option>
-                  <option>Retail / Sieci handlowe</option>
-                  <option>Inne FMCG</option>
+                  <option value="">{k.sectorDefault}</option>
+                  {k.sectors.map((s) => <option key={s}>{s}</option>)}
                 </select>
               </div>
               <button className="dw-form-btn" disabled={!valid} onClick={() => setSent(true)}>
-                Wyślij zapytanie o próbkę →
+                {k.submitBtn}
               </button>
             </>
           )}
@@ -1098,12 +1405,12 @@ function TabKontakt() {
   );
 }
 
-function Footer() {
+function Footer({ t }) {
   return (
     <>
       <div className="dw-hr" />
       <footer className="dw-footer">
-        <span className="dw-footer-tagline">DataWise · Baza Punktów Sprzedaży FMCG · Polska</span>
+        <span className="dw-footer-tagline">{t.footer}</span>
         <div className="dw-footer-contact">
           <a href="mailto:info@datawise.pl">info@datawise.pl</a>
           <a href="https://www.datawise.pl" target="_blank" rel="noopener noreferrer">www.datawise.pl</a>
@@ -1119,14 +1426,16 @@ function Footer() {
 
 export default function App() {
   const [active, setActive] = useState("baza");
+  const [lang, setLang] = useState("pl");
+  const t = T[lang];
 
   const panels = {
-    baza:     <TabBaza />,
-    zrodla:   <TabZrodla />,
-    przyklad: <TabPrzyklad />,
-    pakiety:  <TabPakiety />,
-    uzycia:   <TabUzycia />,
-    kontakt:  <TabKontakt />,
+    baza:     <TabBaza t={t} />,
+    zrodla:   <TabZrodla t={t} />,
+    przyklad: <TabPrzyklad t={t} />,
+    pakiety:  <TabPakiety t={t} />,
+    uzycia:   <TabUzycia t={t} />,
+    kontakt:  <TabKontakt t={t} />,
   };
 
   return (
@@ -1135,27 +1444,43 @@ export default function App() {
 
       <header className="dw-header">
         <img src="/assets/DataWise_logo.png" alt="DataWise" className="dw-logo-img" />
-        <div className="dw-badge">Baza POS FMCG</div>
+        <div className="dw-header-right">
+          <div className="dw-badge">{t.badge}</div>
+          <div className="dw-lang-switch">
+            <button
+              className={`dw-lang-btn${lang === "pl" ? " active" : ""}`}
+              onClick={() => setLang("pl")}
+            >
+              PL
+            </button>
+            <button
+              className={`dw-lang-btn${lang === "en" ? " active" : ""}`}
+              onClick={() => setLang("en")}
+            >
+              EN
+            </button>
+          </div>
+        </div>
       </header>
 
       <nav className="dw-nav">
-        {TABS.map((t) => (
+        {t.tabs.map((tab) => (
           <button
-            key={t.id}
-            className={`dw-tab${active === t.id ? " active" : ""}`}
-            onClick={() => setActive(t.id)}
+            key={tab.id}
+            className={`dw-tab${active === tab.id ? " active" : ""}`}
+            onClick={() => setActive(tab.id)}
           >
-            <Icon name={t.icon} size={16} style={{ opacity: 0.7 }} />
-            {t.label}
+            <Icon name={tab.icon} size={16} style={{ opacity: 0.7 }} />
+            {tab.label}
           </button>
         ))}
       </nav>
 
-      <main key={active}>
+      <main key={`${active}-${lang}`}>
         {panels[active]}
       </main>
 
-      <Footer />
+      <Footer t={t} />
     </>
   );
 }
