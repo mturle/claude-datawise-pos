@@ -399,9 +399,28 @@ function TabUzycia({ t }) {
 function TabKontakt({ t }) {
   const k = t.kontakt;
   const [form, setForm] = useState({ name: "", company: "", email: "", sector: "" });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
   const valid = form.name.trim() && form.email.includes("@");
+
+  const handleSubmit = async () => {
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          company: form.company,
+          email: form.email,
+          sector: form.sector,
+        }),
+      });
+      setStatus(res.ok ? "success" : "error");
+    } catch {
+      setStatus("error");
+    }
+  };
 
   return (
     <div className="dw-section">
@@ -429,7 +448,7 @@ function TabKontakt({ t }) {
         </div>
 
         <div className="dw-form-box dw-fade1">
-          {sent ? (
+          {status === "success" ? (
             <div className="dw-success">
               <div className="dw-success-ico">
                 <Icon name="check_circle" size={52} />
@@ -459,8 +478,17 @@ function TabKontakt({ t }) {
                   {k.sectors.map((s) => <option key={s}>{s}</option>)}
                 </select>
               </div>
-              <button className="dw-form-btn" disabled={!valid} onClick={() => setSent(true)}>
-                {k.submitBtn}
+              {status === "error" && (
+                <div style={{ fontSize: "12.5px", color: "#DC2626", marginBottom: "8px" }}>
+                  {k.errorMsg}
+                </div>
+              )}
+              <button
+                className="dw-form-btn"
+                disabled={!valid || status === "loading"}
+                onClick={handleSubmit}
+              >
+                {status === "loading" ? k.sendingBtn : k.submitBtn}
               </button>
             </>
           )}
