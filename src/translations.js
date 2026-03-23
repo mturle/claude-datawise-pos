@@ -11,7 +11,7 @@ const T = {
     ],
     hero: {
       label: "Produkt dostępny od ręki",
-      title: "Wszechstronny Univers Punktów Sprzedaży",
+      title: "Uniwers punktów sprzedaży",
       titleEm: "z danymi o potencjale otoczenia — dla rynku FMCG w Polsce",
       sub: "Baza 135\u00a0000+ lokalizacji FMCG i HoReCa wzbogacona o dane przestrzenne, demograficzne, mobilne (T-Mobile) i transakcyjne (Visa). Gotowa do integracji z CRM i BI.",
     },
@@ -39,6 +39,11 @@ const T = {
       title: "Trzy unikalne źródła",
       titleEm: "w jednym produkcie",
       note: "Jako jedyna firma w Polsce łączymy te trzy źródła w jednym produkcie — gotowym do integracji z systemami CRM i BI.",
+      servicesBanner: {
+        eyebrow: "Nie tylko dane",
+        title: "Analizy i insights na zamówienie",
+        sub: "Obok danych oferujemy kompleksowe usługi analityczne — gotowe odpowiedzi na strategiczne pytania Twojego biznesu.",
+      },
     },
     sources: [
       {
@@ -69,6 +74,28 @@ const T = {
           "Wartość koszyka i częstotliwość zakupów",
           "Segmenty klientów wg life-style",
           "Zachowania i preferencje konsumentów",
+        ],
+      },
+    ],
+    services: [
+      {
+        icon: "area_chart", color: "#0A1F5C",
+        name: "Analizy strategiczne", sub: "Gotowe raporty decyzyjne",
+        items: [
+          "Zasięg i pokrycie rynku",
+          "Porównanie z konkurencją i udziały rynkowe",
+          "Analiza pokrycia kanałów dystrybucji",
+          "Perspektywy wzrostu w kontekście zmian demograficznych",
+        ],
+      },
+      {
+        icon: "manage_search", color: "#1A3580",
+        name: "Insights & Badania POS", sub: "Klasyczne i oparte o Big Data",
+        items: [
+          "Badania na wybranych grupach punktów sprzedaży",
+          "Segmentacja i profilowanie POS",
+          "Analizy Big Data: dane mobilne i transakcyjne",
+          "Diagnoza wyników: 'dlaczego' i 'co dalej'",
         ],
       },
     ],
@@ -168,6 +195,16 @@ const T = {
         body: "Wzbogacenie danych wewnętrznych (sprzedaż, dystrybucja) o kontekst przestrzenny. Benchmarking wyników vs. potencjał — wreszcie wiadomo, który POS jest pod-, a który nad-realizatorem.",
         pills: ["Benchmarking", "Enrichment CRM", "Dashboard"],
       },
+      {
+        icon: "area_chart", dept: "Analizy strategiczne",
+        body: "Zasięg sieci, udziały rynkowe, pokrycie rynku i benchmark vs. konkurencja — gotowe raporty strategiczne oparte o dane przestrzenne, mobilne i transakcyjne, z uwzględnieniem trendów demograficznych.",
+        pills: ["Udziały rynkowe", "Zasięg sieci", "Pokrycie rynku"],
+      },
+      {
+        icon: "manage_search", dept: "Insights & Badania POS",
+        body: "Badania na precyzyjnie dobranych grupach punktów sprzedaży — metodami klasycznymi lub opartymi o Big Data. Odpowiadamy na pytanie 'dlaczego' wyniki wyglądają tak, a nie inaczej.",
+        pills: ["Badania Big Data", "Segmenty POS", "Diagnoza"],
+      },
     ],
     benefits: [
       { icon: "bolt",      title: "Dostępna od ręki", sub: "Gotowe pliki + API — zero czasu na zbieranie" },
@@ -225,7 +262,7 @@ const T = {
     ],
     hero: {
       label: "Product ready to use",
-      title: "Comprehensive Universe of Points of Sale",
+      title: "Universe of Points of Sale",
       titleEm: "with surrounding potential data — for the Polish FMCG market",
       sub: "A database of 135\u00a0000+ FMCG and HoReCa locations enriched with spatial, demographic, mobile (T-Mobile) and transactional (Visa) data. Ready to integrate with CRM and BI.",
     },
@@ -253,6 +290,11 @@ const T = {
       title: "Three unique sources",
       titleEm: "in one product",
       note: "We are the only company in Poland combining these three sources in a single product — ready to integrate with CRM and BI systems.",
+      servicesBanner: {
+        eyebrow: "Beyond the data",
+        title: "Analytics and insights on demand",
+        sub: "Alongside raw data, we offer comprehensive analytical services — ready answers to strategic questions for your business.",
+      },
     },
     sources: [
       {
@@ -283,6 +325,28 @@ const T = {
           "Basket value & purchase frequency",
           "Customer segments by lifestyle",
           "Consumer behavior & preferences",
+        ],
+      },
+    ],
+    services: [
+      {
+        icon: "area_chart", color: "#0A1F5C",
+        name: "Strategic Analytics", sub: "Ready-to-use decision reports",
+        items: [
+          "Market reach and coverage analysis",
+          "Competitive benchmarking and market share",
+          "Distribution channel coverage analysis",
+          "Growth prospects in light of demographic shifts",
+        ],
+      },
+      {
+        icon: "manage_search", color: "#1A3580",
+        name: "Insights & POS Research", sub: "Traditional and Big Data-driven",
+        items: [
+          "Research on selected groups of points of sale",
+          "POS segmentation and profiling",
+          "Big Data analysis: mobile and transactional data",
+          "Performance diagnostics: \"why\" and \"what next\"",
         ],
       },
     ],
@@ -381,6 +445,16 @@ const T = {
         icon: "trending_up", dept: "BI & Reporting",
         body: "Enriching internal data (sales, distribution) with spatial context. Performance benchmarking vs. potential — finally knowing which POS is under- and which is over-performing.",
         pills: ["Benchmarking", "CRM enrichment", "Dashboard"],
+      },
+      {
+        icon: "area_chart", dept: "Strategic Analytics",
+        body: "Network reach, market share, channel coverage and competitive benchmarking — ready strategic reports built on spatial, mobile and transactional data, fully accounting for shifting demographics.",
+        pills: ["Market share", "Network reach", "Coverage"],
+      },
+      {
+        icon: "manage_search", dept: "Insights & POS Research",
+        body: "Research on carefully selected groups of points of sale — using traditional methods or Big Data. We answer the \"why\" behind performance patterns and identify what to do next.",
+        pills: ["Big Data research", "POS segments", "Diagnostics"],
       },
     ],
     benefits: [

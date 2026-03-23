@@ -196,6 +196,38 @@ function TabZrodla({ t }) {
         <Icon name="emoji_events" size={22} style={{ color: "#D4A020", flexShrink: 0 }} />
         {t.zrodla.note}
       </div>
+
+      <div className="dw-services-block dw-fade">
+        <div className="dw-services-eyebrow">
+          <Icon name="auto_awesome" size={15} />
+          {t.zrodla.servicesBanner.eyebrow}
+        </div>
+        <div className="dw-services-htitle">{t.zrodla.servicesBanner.title}</div>
+        <div className="dw-services-hsub">{t.zrodla.servicesBanner.sub}</div>
+        <div className="dw-services-grid">
+          {t.services.map((s) => (
+            <div className="dw-src" key={s.name}>
+              <div className="dw-src-head">
+                <div className="dw-src-ico" style={{ color: s.color }}>
+                  <Icon name={s.icon} size={22} />
+                </div>
+                <div>
+                  <div className="dw-src-name" style={{ color: s.color }}>{s.name}</div>
+                  <div className="dw-src-sub">{s.sub}</div>
+                </div>
+              </div>
+              <div className="dw-src-body">
+                {s.items.map((item) => (
+                  <div className="dw-src-item" key={item}>
+                    <div className="dw-src-dot" />
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

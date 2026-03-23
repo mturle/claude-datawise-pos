@@ -256,6 +256,32 @@ const GLOBAL_CSS = `
   }
   .dw-note-ico { color: var(--yellow-dark); font-size: 22px; flex-shrink: 0; }
 
+  /* ── SERVICES BLOCK ──────────────────────────────────────────────────────── */
+  .dw-services-block {
+    margin-top: 28px;
+    padding: 24px 24px 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--blue-light);
+  }
+  .dw-services-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--yellow-dark);
+    margin-bottom: 8px;
+  }
+  .dw-services-htitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600; color: var(--blue);
+    margin-bottom: 6px; line-height: 1.2;
+  }
+  .dw-services-hsub {
+    font-size: 13px; color: var(--mid); margin-bottom: 20px; line-height: 1.6;
+  }
+  .dw-services-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+
   /* ── PACKAGES ────────────────────────────────────────────────────────────── */
   .dw-pkgs { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
   .dw-pkg {
@@ -328,6 +354,8 @@ const GLOBAL_CSS = `
   .dw-use:nth-child(2) { animation-delay: 0.09s; }
   .dw-use:nth-child(3) { animation-delay: 0.14s; }
   .dw-use:nth-child(4) { animation-delay: 0.19s; }
+  .dw-use:nth-child(5) { animation-delay: 0.24s; }
+  .dw-use:nth-child(6) { animation-delay: 0.29s; }
   .dw-use:hover { border-color: var(--blue); }
   .dw-use-head { display: flex; align-items: center; gap: 13px; margin-bottom: 12px; }
   .dw-use-ico {
@@ -520,7 +548,7 @@ const GLOBAL_CSS = `
     .dw-hstat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 18px 22px; }
     .dw-hstat:last-child { border-bottom: none; }
     .dw-section { padding: 36px 20px; }
-    .dw-cats, .dw-sources, .dw-uses, .dw-benefits, .dw-contact { grid-template-columns: 1fr; }
+    .dw-cats, .dw-sources, .dw-uses, .dw-benefits, .dw-contact, .dw-services-grid { grid-template-columns: 1fr; }
     .dw-pkg { grid-template-columns: 42px 1fr auto; }
     .dw-tags { display: none; }
     .dw-footer { flex-direction: column; align-items: flex-start; padding: 28px 20px; gap: 12px; }
