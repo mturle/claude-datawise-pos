@@ -1,9 +1,9 @@
 const T = {
   pl: {
-    badge: "Baza POS FMCG",
+    badge: "Baza POS FMCG&HoReCa",
     tabs: [
-      { id: "baza",     label: "Baza POS",        icon: "store" },
-      { id: "zrodla",   label: "Źródła danych",   icon: "hub" },
+      { id: "baza",     label: "Baza",             icon: "store" },
+      { id: "zrodla",   label: "Źródła danych",    icon: "hub" },
       { id: "przyklad", label: "Przykład",         icon: "map" },
       { id: "pakiety",  label: "Pakiety",          icon: "apps" },
       { id: "uzycia",   label: "Zastosowania",     icon: "lightbulb" },
@@ -16,14 +16,14 @@ const T = {
       sub: "Baza 135\u00a0000+ lokalizacji FMCG i HoReCa wzbogacona o dane przestrzenne, demograficzne, mobilne (T-Mobile) i transakcyjne (Visa). Gotowa do integracji z CRM i BI.",
     },
     stats: [
-      { val: "135", unit: "\u00a0000+", lbl: "Punktów sprzedaży FMCG" },
+      { val: "135", unit: "\u00a0000+", lbl: "Punktów sprzedaży" },
       { val: "47",  unit: "\u00a0000+", lbl: "Lokali HoReCa" },
       { val: "100", unit: "+",          lbl: "Sieci grocery" },
     ],
     baza: {
       eyebrow: "Kategorie w bazie",
       title: "Pełne pokrycie kanałów",
-      titleEm: "grocery i HoReCa",
+      titleEm: "FMCG i HoReCa",
       avail: "Baza dostępna od ręki — gotowe pliki i API",
     },
     cats: [
@@ -247,13 +247,13 @@ const T = {
       successSub: "Skontaktujemy się w ciągu 24h z próbką danych dopasowaną do Twojej kategorii.",
       errorMsg: "Wystąpił błąd. Spróbuj ponownie lub napisz bezpośrednio na info@datawise.pl.",
     },
-    footer: "DataWise · Baza Punktów Sprzedaży FMCG · Polska",
+    footer: "DataWise · Baza Punktów Sprzedaży FMCG&HoReCa · Polska",
   },
 
   en: {
-    badge: "FMCG POS Database",
+    badge: "FMCG&HoReCa POS Database",
     tabs: [
-      { id: "baza",     label: "POS Database",    icon: "store" },
+      { id: "baza",     label: "Database",         icon: "store" },
       { id: "zrodla",   label: "Data Sources",     icon: "hub" },
       { id: "przyklad", label: "Example",          icon: "map" },
       { id: "pakiety",  label: "Packages",         icon: "apps" },
@@ -267,14 +267,14 @@ const T = {
       sub: "A database of 135\u00a0000+ FMCG and HoReCa locations enriched with spatial, demographic, mobile (T-Mobile) and transactional (Visa) data. Ready to integrate with CRM and BI.",
     },
     stats: [
-      { val: "135", unit: "\u00a0000+", lbl: "FMCG Points of Sale" },
+      { val: "135", unit: "\u00a0000+", lbl: "Points of Sale" },
       { val: "47",  unit: "\u00a0000+", lbl: "HoReCa Venues" },
-      { val: "100", unit: "+",          lbl: "Grocery Chains" },
+      { val: "100", unit: "+",          lbl: "Chains" },
     ],
     baza: {
       eyebrow: "Categories in the database",
       title: "Full channel coverage",
-      titleEm: "grocery & HoReCa",
+      titleEm: "FCMG & HoReCa",
       avail: "Database ready to use — files and API",
     },
     cats: [
@@ -498,7 +498,7 @@ const T = {
       successSub: "We will get back to you within 24h with a data sample tailored to your category.",
       errorMsg: "Something went wrong. Please try again or email us directly at info@datawise.pl.",
     },
-    footer: "DataWise · FMCG Points of Sale Database · Poland",
+    footer: "DataWise · FMCG&HoReCa Points of Sale Database · Poland",
   },
 };
 
