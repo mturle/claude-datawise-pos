@@ -72,7 +72,7 @@ const T = {
         items: [
           "Wydatki w kanałach (grocery, HoReCa, e-com…)",
           "Wartość koszyka i częstotliwość zakupów",
-          "Segmenty klientów wg life-style",
+          "Segmenty klientów wg lifestyle",
           "Zachowania i preferencje konsumentów",
         ],
       },
@@ -165,7 +165,7 @@ const T = {
       {
         icon: "person_search",
         name: "LIFE-STYLE", sub: "Segmenty i styl życia",
-        tags: ["Segmenty", "Life-style", "Visa"],
+        tags: ["Segmenty", "Lifestyle", "Visa"],
         detail: "Segmentacja konsumentów wg zachowań transakcyjnych Visa. Pozwala dopasować portfolio marek i mechanizmy promocyjne do realnych preferencji klientów w zasięgu POS.",
       },
     ],
