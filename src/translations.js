@@ -164,7 +164,7 @@ const T = {
       },
       {
         icon: "person_search",
-        name: "LIFE-STYLE", sub: "Segmenty i styl życia",
+        name: "LIFESTYLE", sub: "Segmenty i styl życia",
         tags: ["Segmenty", "Lifestyle", "Visa"],
         detail: "Segmentacja konsumentów wg zachowań transakcyjnych Visa. Pozwala dopasować portfolio marek i mechanizmy promocyjne do realnych preferencji klientów w zasięgu POS.",
       },
@@ -415,7 +415,7 @@ const T = {
       },
       {
         icon: "person_search",
-        name: "LIFE-STYLE", sub: "Segments & lifestyle",
+        name: "LIFESTYLE", sub: "Segments & lifestyle",
         tags: ["Segments", "Lifestyle", "Visa"],
         detail: "Consumer segmentation based on Visa transaction behavior. Enables matching brand portfolio and promotional mechanics to the actual preferences of customers within POS catchment.",
       },
