@@ -19,84 +19,198 @@ function Icon({ name, size = 20, style = {} }) {
 /* ─────────────────────────────────────────────────────────────────────────── */
 /*  MAP HELPERS                                                                 */
 /* ─────────────────────────────────────────────────────────────────────────── */
-const ratingColor = (r) => {
-  if (r == null) return "#8AA8CC";
-  if (r >= 80) return "#0A1F5C";
-  if (r >= 60) return "#1A3A7A";
-  if (r >= 40) return "#2E5CA8";
-  return "#6B8EC4";
-};
 
-const LEGEND = [
-  { label: "80–100", color: "#0A1F5C" },
-  { label: "60–79",  color: "#1A3A7A" },
-  { label: "40–59",  color: "#2E5CA8" },
-  { label: "0–39",   color: "#6B8EC4" },
+/* Shape encodes the consumer profile (profile_level, from Visa card data). */
+const PROFILE_SHAPES = {
+  Premium:  "triangle",
+  Mieszany: "square",
+  Base:     "circle",
+};
+const profileShape = (p) => PROFILE_SHAPES[p] ?? "circle";
+
+/* Colour encodes daytime traffic affinity (traffic_12pm_n1000 vs. sample avg).
+   Affinity = value / avg * 100  (100 = average). Five classes, light → navy. */
+const AFFINITY_CLASSES = [
+  { key: "veryLow",  max: 45,       color: "#8AA8CC" },
+  { key: "low",      max: 85,       color: "#6B8EC4" },
+  { key: "medium",   max: 120,      color: "#2E5CA8" },
+  { key: "high",     max: 170,      color: "#1A3A7A" },
+  { key: "veryHigh", max: Infinity, color: "#0A1F5C" },
 ];
+const affinityClass = (aff) =>
+  AFFINITY_CLASSES.find((c) => aff < c.max) ?? AFFINITY_CLASSES[AFFINITY_CLASSES.length - 1];
+
+/* SVG shape primitive — shared by Leaflet markers (string) and the legend (JSX). */
+const shapePrim = (shape, fill, stroke, sw) => {
+  if (shape === "square")
+    return `<rect x="5" y="5" width="14" height="14" rx="2.5" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="round"/>`;
+  if (shape === "triangle")
+    return `<polygon points="12,3.5 20.5,19.5 3.5,19.5" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="round"/>`;
+  return `<circle cx="12" cy="12" r="7.5" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+};
+const markerSvg = (shape, fill, selected) =>
+  `<svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${shapePrim(
+    shape, fill, selected ? "#F5C242" : "#ffffff", selected ? 3 : 1.5
+  )}</svg>`;
+const makeIcon = (L, shape, fill, selected) =>
+  L.divIcon({ className: "dw-marker", html: markerSvg(shape, fill, selected), iconSize: [26, 26], iconAnchor: [13, 13] });
+
+/* React shape for the legend. */
+function Shape({ shape, color = "#2E5CA8", size = 14 }) {
+  const stroke = "rgba(120,140,170,0.55)";
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
+      {shape === "square" && <rect x="5" y="5" width="14" height="14" rx="2.5" fill={color} stroke={stroke} strokeWidth="1.5" strokeLinejoin="round" />}
+      {shape === "triangle" && <polygon points="12,3.5 20.5,19.5 3.5,19.5" fill={color} stroke={stroke} strokeWidth="1.5" strokeLinejoin="round" />}
+      {shape === "circle" && <circle cx="12" cy="12" r="7.5" fill={color} stroke={stroke} strokeWidth="1.5" />}
+    </svg>
+  );
+}
+
+/* value formatters */
+const nf = (v) => (typeof v === "number" ? v.toLocaleString("pl-PL") : v);
+const pct = (v) =>
+  typeof v === "number" ? `${(v * 100).toLocaleString("pl-PL", { maximumFractionDigits: 1 })}%` : null;
+const yesNo = (v, t) => (v === "tak" ? t.yes : v === "nie" ? t.no : v);
+const nonEmpty = (v) => (v == null || v === "" ? null : v);
 
 function PointPanel({ p, t }) {
   if (!p) return null;
   const pt = t.popup;
   const f = pt.fields;
-  const addr = `${p["Prefix"] || ""} ${p["Ulica"] || ""} ${p["Nr Ulicy"] || ""}, ${p["Kod pocztowy"] || ""} ${p["Miejscowość"] || ""}`.trim();
+  const addr = `${p.prefix || ""} ${p.street || ""} ${p.building || ""}, ${p.zip || ""} ${p.city || ""}`
+    .replace(/\s+/g, " ").trim();
 
+  const affCls = affinityClass(p._affinity ?? 0);
+  const affLabel = t.przyklad.affinityClasses[affCls.key];
+
+  // header name: chain (+ optional store number) → location_name → subcategory
+  const chain = nonEmpty(p.name_chain);
+  const headName = chain
+    ? `${chain}${nonEmpty(p.location_number) ? ` #${p.location_number}` : ""}`
+    : nonEmpty(p.location_name) || nonEmpty(p.subcategory_name) || "—";
+
+  // ── grouped sections (label, value) ──────────────────────────────────────
   const basic = [
-    [f.category,      p["Kategoria"]],
-    [f.subcategory,   p["Podkategoria"]],
-    [f.chain,         p["Sieć"]],
-    [f.storeNo,       p["Numer sklepu"]],
-    [f.municipalType, p["Typ gminy"]],
-  ].filter(([, v]) => v != null);
+    [f.category,     nonEmpty(p.category_name)],
+    [f.subcategory,  nonEmpty(p.subcategory_name)],
+    [f.inMall,        yesNo(p.centrum_taknie, pt)],
+    [f.mallName,      nonEmpty(p.centrum_nazwa)],
+    [f.mallFormat,    nonEmpty(p.centrum_format)],
+  ];
 
   const location = [
-    [f.inMall,       p["Lokalizacja w centrum handl."]],
-    [f.mallName,     p["Nazwa centrum"]],
-    [f.mallFormat,   p["Format centrum"]],
-    [f.inRetailPark, p["Lokalizacja w parku handl."]],
-  ].filter(([, v]) => v != null);
+    [f.voiv,         nonEmpty(p.voiv)],
+    [f.pov,          nonEmpty(p.pov)],
+    [f.mun,          nonEmpty(p.mun)],
+    [f.segment,      nonEmpty(p.municipality_segment)],
+    [f.buildingClass, nonEmpty(p.klasa_zabudowy)],
+    [f.iahu,       nf(p.iahu)],
+  ];
 
-  const data = [
-    [f.ranking,        p["Rankig-0-100"]],
-    [f.poi75,          p["Liczba POI w promieniu 75m"]],
-    [f.discounters1km, p["Liczba innych dyskontów w promieniu 1km"]],
-    [f.pop1km,         p["Liczba ludności 1km"]?.toLocaleString("pl-PL")],
-    [f.popUnder14,     p["Odsetek populacji w wieku do 14 lat"]],
-    [f.jobs1km,        p["Liczba miejsc pracy w promieniu 1km"]?.toLocaleString("pl-PL")],
-    [f.income,         p["Dochod rozporzadzalny per capita"]?.toLocaleString("pl-PL")],
-    [f.trafficIndex,   p["Indeks koncentracji generatorów ruchu"]],
-  ].filter(([, v]) => v != null);
+  // DataWise — demographics & commercial potential
+  const demographics = [
+    [f.population, nf(p.pop_tot)],
+    [f.popUnder14, pct(p.pop_0014_perc)],
+    [f.jobs,       nf(p.emplo)],
+    [f.dochSum,    typeof p.doch_ro_sum === "number" ? `${nf(p.doch_ro_sum)} zł` : null],
+    [f.dochAvg,    typeof p.doch_ro_avg === "number" ? `${nf(p.doch_ro_avg)} zł` : null],
+  ];
+
+  // DataWise spatial — POI & competition in the surroundings
+  const surroundings = [
+    [f.poi75,          nf(p.poi_75m)],
+    [f.compet150,      nf(p.cnt_compet_150m)],
+    [f.convenience150, nf(p.convenience_cnt_150m)],
+    [f.retailChain150, nf(p.cnt_retail_chain_150m)],
+    [f.busStop150,     nf(p.bus_stop_cnt_150m)],
+    [f.compet500,      nf(p.cnt_compet_500m)],
+    [f.supermarket500, nf(p.supermarket_cnt_500m)],
+    [f.petrol500,      nf(p.cnt_petrol_500m)],
+    [f.paczkomat500,   nf(p.paczkomat_cnt_500m)],
+    [f.compet1000,     nf(p.cnt_compet_1000m)],
+    [f.hypermarket1000,nf(p.hypermarket_cnt_1000m)],
+    [f.retailPark1000, nf(p.retail_park_cnt_1000m)],
+  ];
+
+  // T-Mobile — mobile-network traffic
+  const traffic = [
+    [f.trafficLevel,  nonEmpty(p.traffic_level)],
+    [f.traffic12pm,   nf(p.traffic_12pm_n1000)],
+    [f.traffic5pm,    nf(p.traffic_5pm_n1000)],
+    [f.traffic4am,    nf(p.traffic_4am_n1000)],
+    [f.trafficRatio,  typeof p.traffic_5pm_to_4am_ratio === "number" ? p.traffic_5pm_to_4am_ratio.toLocaleString("pl-PL") : null],
+  ];
+
+  // Visa — transactional
+  const cards = [
+    [f.cardsUniq,     nf(p.total_cards_uniq)],
+    [f.totalTrn,      nf(p.total_trn)],
+    [f.onlineTrn,     nf(p.online_total_trn)],
+    [f.f2fPerOnline,  typeof p.f2f_per_online_tr === "number" ? p.f2f_per_online_tr.toLocaleString("pl-PL") : null],
+    [f.monthlySpend,  typeof p.monthly_spend_avg === "number" ? `${p.monthly_spend_avg.toLocaleString("pl-PL", { maximumFractionDigits: 0 })} zł` : null],
+    [f.spendAffinity, nf(p.monthly_spend_avg_affinity)],
+    [f.foodShare,     pct(p.food_spend_perc)],
+    [f.eatingOut,     pct(p.eatingout_spend_perc)],
+    [f.clothingCosm,  typeof p.clothing_and_cosm_spend_mth_avg_usd === "number" ? `${p.clothing_and_cosm_spend_mth_avg_usd.toLocaleString("pl-PL", { maximumFractionDigits: 0 })} USD` : null],
+  ];
+
+  // Visa — lifestyle (share of active cards)
+  const lifestyle = [
+    [f.lsCar,          pct(p.car_active_cards_share)],
+    [f.lsTransit,      pct(p.public_transport_active_cards_share)],
+    [f.lsTravel,       pct(p.travel_world_active_cards_share)],
+    [f.lsAlcohol,      pct(p.alcohol_active_cards_share)],
+    [f.lsFit,          pct(p.keepingfit_active_cards_share)],
+    [f.lsEco,          pct(p.ecofood_active_cards_share)],
+    [f.lsVegan,        pct(p.vegan_active_cards_share)],
+    [f.lsPremiumWear,  pct(p.premiumclothes_active_cards_share)],
+    [f.lsOnlineGroc,   pct(p.onlinegrocery_active_cards_share)],
+    [f.lsOrderFood,    pct(p.orderingfood_active_cards_share)],
+  ];
+
+  const sections = [
+    [pt.sectionBasic,        basic],
+    [pt.sectionLocation,     location],
+    [pt.sectionDemographics, demographics],
+    [pt.sectionTraffic,      traffic],
+    [pt.sectionCards,        cards],
+    [pt.sectionLifestyle,    lifestyle],
+    [pt.sectionSurroundings, surroundings],
+  ];
 
   return (
     <>
       <div className="dw-popup-head">
-        <div className="dw-popup-name">{p["Sieć"]} #{p["Numer sklepu"]}</div>
+        <div className="dw-popup-name">{headName}</div>
         <div className="dw-popup-addr">{addr}</div>
-        <div className="dw-popup-rank">{pt.rankLabel}: {p["Rankig-0-100"] ?? "–"} / 100</div>
+        <div className="dw-popup-badges">
+          <span className="dw-badge-chip">
+            <span className="dw-legend-dot" style={{ background: affCls.color, width: 9, height: 9 }} />
+            {pt.affinityLabel}: {p._affinity != null ? Math.round(p._affinity) : "–"} · {affLabel}
+          </span>
+          <span className="dw-badge-chip">
+            <Shape shape={profileShape(p.profile_level)} color="#fff" size={12} />
+            {pt.profileLabel}: {p.profile_level || "–"}
+          </span>
+        </div>
       </div>
       <div className="dw-popup-body">
-        <div className="dw-popup-section">{pt.sectionBasic}</div>
-        {basic.map(([k, v]) => (
-          <div className="dw-popup-row" key={k}>
-            <span className="dw-popup-key">{k}</span>
-            <span className="dw-popup-val">{v}</span>
-          </div>
-        ))}
-        {location.length > 0 && <>
-          <div className="dw-popup-section">{pt.sectionLocation}</div>
-          {location.map(([k, v]) => (
-            <div className="dw-popup-row" key={k}>
-              <span className="dw-popup-key">{k}</span>
-              <span className="dw-popup-val">{v}</span>
+        {sections.map(([title, rows]) => {
+          const filled = rows.filter(([, v]) => v != null);
+          if (filled.length === 0) return null;
+          return (
+            <div key={title}>
+              <div className="dw-popup-section">{title}</div>
+              {filled.map(([k, v]) => (
+                <div className="dw-popup-row" key={k}>
+                  <span className="dw-popup-key">{k}</span>
+                  <span className="dw-popup-val">{v}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </>}
-        <div className="dw-popup-section">{pt.sectionData}</div>
-        {data.map(([k, v]) => (
-          <div className="dw-popup-row" key={k}>
-            <span className="dw-popup-key">{k}</span>
-            <span className="dw-popup-val">{v}</span>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );
@@ -241,10 +355,12 @@ function TabPrzyklad({ t }) {
 
   // keep click handler up-to-date without re-running map init
   onClickRef.current = (props, layer) => {
+    const L = window.L;
     if (selectedLayerRef.current) {
-      selectedLayerRef.current.setStyle({ color: "#ffffff", weight: 1.5 });
+      const prev = selectedLayerRef.current;
+      prev.setIcon(makeIcon(L, prev._dwShape, prev._dwFill, false));
     }
-    layer.setStyle({ color: "#F5C242", weight: 2.5 });
+    layer.setIcon(makeIcon(L, layer._dwShape, layer._dwFill, true));
     selectedLayerRef.current = layer;
     setSelectedPoint(props);
   };
@@ -270,24 +386,32 @@ function TabPrzyklad({ t }) {
         maxZoom: 19,
       }).addTo(map);
 
-      fetch("/assets/data-sample.geojson")
+      fetch("/assets/data-sample-new.geojson")
         .then((r) => r.json())
         .then((geojson) => {
-          if (geojson.features?.length > 0) {
-            setSelectedPoint(geojson.features[0].properties);
-          }
+          const feats = geojson.features ?? [];
+
+          // traffic affinity = value / sample-average * 100 (100 = average)
+          const traf = feats
+            .map((ft) => ft.properties?.traffic_12pm_n1000)
+            .filter((v) => typeof v === "number");
+          const avg = traf.length ? traf.reduce((a, b) => a + b, 0) / traf.length : 0;
+          feats.forEach((ft) => {
+            const v = ft.properties?.traffic_12pm_n1000;
+            ft.properties._affinity = avg > 0 && typeof v === "number" ? (v / avg) * 100 : null;
+          });
+
+          if (feats.length > 0) setSelectedPoint(feats[0].properties);
+
           L.geoJSON(geojson, {
             pointToLayer: (feature, latlng) => {
-              const rating = feature.properties["Rankig-0-100"];
-              const radius = rating >= 80 ? 9 : rating >= 60 ? 8 : rating >= 40 ? 7 : 6;
-              return L.circleMarker(latlng, {
-                radius,
-                fillColor: ratingColor(rating),
-                color: "#ffffff",
-                weight: 1.5,
-                opacity: 1,
-                fillOpacity: 0.88,
-              });
+              const props = feature.properties;
+              const fill = affinityClass(props._affinity ?? 0).color;
+              const shape = profileShape(props.profile_level);
+              const marker = L.marker(latlng, { icon: makeIcon(L, shape, fill, false) });
+              marker._dwShape = shape;
+              marker._dwFill = fill;
+              return marker;
             },
             onEachFeature: (feature, layer) => {
               layer.on("click", () => onClickRef.current(feature.properties, layer));
@@ -328,11 +452,19 @@ function TabPrzyklad({ t }) {
       </div>
 
       <div className="dw-map-legend">
-        <span className="dw-map-legend-title">{t.przyklad.legendTitle}</span>
-        {LEGEND.map((l) => (
-          <span className="dw-legend-item" key={l.label}>
-            <span className="dw-legend-dot" style={{ background: l.color }} />
-            {l.label}
+        <span className="dw-map-legend-title">{t.przyklad.legendSizeTitle}</span>
+        {AFFINITY_CLASSES.map((c) => (
+          <span className="dw-legend-item" key={c.key}>
+            <span className="dw-legend-dot" style={{ background: c.color }} />
+            {t.przyklad.affinityClasses[c.key]}
+          </span>
+        ))}
+        <span className="dw-legend-sep" />
+        <span className="dw-map-legend-title">{t.przyklad.legendColorTitle}</span>
+        {["Premium", "Mieszany", "Base"].map((prof) => (
+          <span className="dw-legend-item" key={prof}>
+            <Shape shape={profileShape(prof)} color="#4E74B4" />
+            {prof}
           </span>
         ))}
       </div>

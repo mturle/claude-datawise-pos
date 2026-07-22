@@ -496,6 +496,9 @@ const GLOBAL_CSS = `
   .dw-map-legend-title { font-weight: 700; color: var(--blue); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px; }
   .dw-legend-item { display: flex; align-items: center; gap: 6px; font-weight: 500; }
   .dw-legend-dot { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.6); flex-shrink: 0; }
+  .dw-legend-sep { width: 1px; align-self: stretch; background: var(--border); margin: -4px 6px; }
+  .dw-marker { background: transparent; border: none; }
+  .leaflet-div-icon { background: transparent; border: none; }
   .dw-map-info {
     padding: 20px 48px 0;
     font-size: 13px; color: var(--mid); line-height: 1.65;
@@ -511,14 +514,25 @@ const GLOBAL_CSS = `
     display: flex; align-items: center; gap: 8px;
   }
   .dw-popup-addr { font-size: 11.5px; color: rgba(255,255,255,0.65); margin-top: 3px; }
-  .dw-popup-rank {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
-    background: var(--yellow); color: var(--blue);
-    padding: 2px 8px; border-radius: 4px; margin-top: 6px;
+  .dw-popup-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .dw-badge-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.05em;
+    background: rgba(255,255,255,0.14); color: #fff;
+    padding: 3px 9px; border-radius: 5px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
   }
   .dw-popup-body { padding: 10px 0; flex: 1; }
-  .dw-popup-section { padding: 6px 16px 4px; font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .dw-popup-section {
+    padding: 8px 16px 7px 13px;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--blue);
+    background: var(--blue-light);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-left: 3px solid var(--yellow);
+  }
+  .dw-popup-body > div:first-child .dw-popup-section { border-top: none; }
   .dw-popup-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 16px; font-size: 12px; }
   .dw-popup-row:nth-child(even) { background: var(--light); }
   .dw-popup-key { color: var(--mid); font-weight: 400; flex-shrink: 0; }

@@ -1,3 +1,5 @@
 .vercel
 .env*.local
 .DS_Store
+# QGIS sidecar metadata
+*.qmd
