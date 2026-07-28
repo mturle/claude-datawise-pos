@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import GLOBAL_CSS from "./styles.js";
 import T from "./translations.js";
 
@@ -738,6 +739,7 @@ export default function App() {
       </main>
 
       <Footer t={t} />
+      <Analytics />
     </>
   );
 }
