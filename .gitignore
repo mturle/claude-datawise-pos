@@ -3,3 +3,7 @@
 .DS_Store
 # QGIS sidecar metadata
 *.qmd
+
+# Zależności i artefakty builda
+node_modules/
+dist/
