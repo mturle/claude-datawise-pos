@@ -140,7 +140,7 @@ function PointPanel({ p, t }) {
     [f.traffic12pm,   nf(p.traffic_12pm_n1000)],
     [f.traffic5pm,    nf(p.traffic_5pm_n1000)],
     [f.traffic4am,    nf(p.traffic_4am_n1000)],
-    [f.trafficRatio,  typeof p.traffic_5pm_to_4am_ratio === "number" ? p.traffic_5pm_to_4am_ratio.toLocaleString("pl-PL") : null],
+    // [f.trafficRatio,  typeof p.traffic_5pm_to_4am_ratio === "number" ? p.traffic_5pm_to_4am_ratio.toLocaleString("pl-PL") : null],
   ];
 
   // Visa — transactional
@@ -149,7 +149,7 @@ function PointPanel({ p, t }) {
     [f.totalTrn,      nf(p.total_trn)],
     [f.onlineTrn,     nf(p.online_total_trn)],
     [f.f2fPerOnline,  typeof p.f2f_per_online_tr === "number" ? p.f2f_per_online_tr.toLocaleString("pl-PL") : null],
-    [f.monthlySpend,  typeof p.monthly_spend_avg === "number" ? `${p.monthly_spend_avg.toLocaleString("pl-PL", { maximumFractionDigits: 0 })} zł` : null],
+    [f.monthlySpend,  typeof p.monthly_spend_avg === "number" ? `${p.monthly_spend_avg.toLocaleString("pl-PL", { maximumFractionDigits: 0 })} USD` : null],
     [f.spendAffinity, nf(p.monthly_spend_avg_affinity)],
     [f.foodShare,     pct(p.food_spend_perc)],
     [f.eatingOut,     pct(p.eatingout_spend_perc)],
