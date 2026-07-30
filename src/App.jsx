@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics, track } from "@vercel/analytics/react";
 import GLOBAL_CSS from "./styles.js";
 import T from "./translations.js";
 
@@ -682,10 +682,91 @@ function Footer({ t }) {
 /*  ROOT                                                                        */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
+/* Każda zakładka ma własny URL, osobny dla każdego języka — dzięki temu Vercel
+   Analytics liczy ją jako osobny pageview i rozdziela PL od EN w panelu Routes.
+   Wersja EN siedzi pod prefiksem /en. */
+const TAB_PATHS = {
+  pl: {
+    baza:     "/",
+    zrodla:   "/zrodla-danych",
+    przyklad: "/probka-mapa",
+    pakiety:  "/pakiety",
+    uzycia:   "/zastosowania",
+    kontakt:  "/kontakt",
+  },
+  en: {
+    baza:     "/en",
+    zrodla:   "/en/data-sources",
+    przyklad: "/en/sample-map",
+    pakiety:  "/en/packages",
+    uzycia:   "/en/use-cases",
+    kontakt:  "/en/contact",
+  },
+};
+const PATH_LOOKUP = Object.fromEntries(
+  Object.entries(TAB_PATHS).flatMap(([lang, paths]) =>
+    Object.entries(paths).map(([tab, path]) => [path, { lang, tab }])
+  )
+);
+
+/* Custom eventy (plan Pro) — widoczne w zakładce Events. */
+const TAB_EVENTS = {
+  przyklad: "map_view",
+  kontakt:  "contact_view",
+};
+
+const stateFromLocation = () => {
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  return PATH_LOOKUP[path] || { lang: "pl", tab: "baza" };
+};
+
 export default function App() {
-  const [active, setActive] = useState("baza");
-  const [lang, setLang] = useState("pl");
+  const [active, setActive] = useState(() => stateFromLocation().tab);
+  const [lang, setLang] = useState(() => stateFromLocation().lang);
   const t = T[lang];
+
+  /* URL ← zakładka + język */
+  const prev = useRef({ tab: active, lang });
+  useEffect(() => {
+    const path = TAB_PATHS[lang][active] || "/";
+    if (window.location.pathname !== path) {
+      /* sama zmiana języka podmienia wpis w historii, żeby "wstecz" wracało do
+         poprzedniej zakładki, a nie przełączało język w kółko */
+      const langOnly = prev.current.tab === active && prev.current.lang !== lang;
+      const state = { tab: active, lang };
+      if (langOnly) window.history.replaceState(state, "", path);
+      else window.history.pushState(state, "", path);
+    }
+    prev.current = { tab: active, lang };
+  }, [active, lang]);
+
+  /* tytuł, opis i atrybut lang podążają za wybranym językiem */
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.title = t.meta.title;
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute("content", t.meta.description);
+  }, [lang, t]);
+
+  /* zakładka + język ← przycisk wstecz/dalej */
+  useEffect(() => {
+    const onPop = () => {
+      const { tab, lang } = stateFromLocation();
+      setActive(tab);
+      setLang(lang);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
+  /* Event przy wejściu na mapę / kontakt — także przy wejściu z linku
+     bezpośredniego, nie tylko po kliknięciu w zakładkę. Zależy wyłącznie od
+     zakładki, więc przełączenie języka nie generuje duplikatu. */
+  useEffect(() => {
+    const event = TAB_EVENTS[active];
+    if (event) track(event, { lang });
+  }, [active]);
 
   const panels = {
     baza:     <TabBaza t={t} />,

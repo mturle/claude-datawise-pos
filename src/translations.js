@@ -1,5 +1,10 @@
 const T = {
   pl: {
+    meta: {
+      title: "DataWise | Baza POS FMCG",
+      description:
+        "DataWise — Baza Punktów Sprzedaży FMCG z danymi o potencjale otoczenia",
+    },
     badge: "Baza POS FMCG&HoReCa",
     tabs: [
       { id: "baza",     label: "Baza",             icon: "store" },
@@ -301,6 +306,11 @@ const T = {
   },
 
   en: {
+    meta: {
+      title: "DataWise | FMCG POS Database",
+      description:
+        "DataWise — FMCG Points of Sale database with surrounding potential data",
+    },
     badge: "FMCG&HoReCa POS Database",
     tabs: [
       { id: "baza",     label: "Database",         icon: "store" },
