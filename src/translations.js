@@ -4,7 +4,7 @@ const T = {
     tabs: [
       { id: "baza",     label: "Baza",             icon: "store" },
       { id: "zrodla",   label: "Źródła danych",    icon: "hub" },
-      { id: "przyklad", label: "Przykład",         icon: "map" },
+      { id: "przyklad", label: "Próbka",           icon: "map" },
       { id: "pakiety",  label: "Pakiety",          icon: "apps" },
       { id: "uzycia",   label: "Zastosowania",     icon: "lightbulb" },
       { id: "kontakt",  label: "Próbka & Kontakt", icon: "mail" },
@@ -305,7 +305,7 @@ const T = {
     tabs: [
       { id: "baza",     label: "Database",         icon: "store" },
       { id: "zrodla",   label: "Data Sources",     icon: "hub" },
-      { id: "przyklad", label: "Example",          icon: "map" },
+      { id: "przyklad", label: "Sample",           icon: "map" },
       { id: "pakiety",  label: "Packages",         icon: "apps" },
       { id: "uzycia",   label: "Use Cases",        icon: "lightbulb" },
       { id: "kontakt",  label: "Sample & Contact", icon: "mail" },
