@@ -19,6 +19,8 @@ const T = {
       title: "Uniwers punktów sprzedaży",
       titleEm: "z danymi o potencjale otoczenia — dla rynku FMCG w Polsce",
       sub: "Baza 135\u00a0000+ lokalizacji FMCG i HoReCa wzbogacona o dane przestrzenne, demograficzne, mobilne (T-Mobile) i transakcyjne (Visa). Gotowa do integracji z CRM i BI.",
+      ctaMap: "Zobacz próbkę danych na mapie",
+      ctaMapNote: "93 prawdziwe punkty sprzedaży · bez rejestracji",
     },
     stats: [
       { val: "135", unit: "\u00a0000+", lbl: "Punktów sprzedaży" },
@@ -325,6 +327,8 @@ const T = {
       title: "Universe of Points of Sale",
       titleEm: "with surrounding potential data — for the Polish FMCG market",
       sub: "A database of 135\u00a0000+ FMCG and HoReCa locations enriched with spatial, demographic, mobile (T-Mobile) and transactional (Visa) data. Ready to integrate with CRM and BI.",
+      ctaMap: "View sample data on a map",
+      ctaMapNote: "93 real points of sale · no sign-up",
     },
     stats: [
       { val: "135", unit: "\u00a0000+", lbl: "Points of Sale" },

@@ -95,6 +95,18 @@ const GLOBAL_CSS = `
   .dw-tab:hover { color: var(--text); }
   .dw-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
   .dw-tab-ico { font-size: 16px; opacity: 0.75; }
+  /* zakładka z mapą — żółta pigułka + pulsująca kropka, żeby przyciągała wzrok */
+  .dw-tab.featured { position: relative; isolation: isolate; color: var(--blue); }
+  .dw-tab.featured::before {
+    content: ""; position: absolute; inset: 8px 6px; z-index: -1;
+    background: rgba(245,194,66,0.2); border: 1px solid rgba(245,194,66,0.6);
+    border-radius: 6px; transition: background 0.15s;
+  }
+  .dw-tab.featured:hover::before { background: rgba(245,194,66,0.34); }
+  .dw-tab-live {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--yellow-dark);
+    animation: livePulse 2s ease-in-out infinite;
+  }
 
   /* ── HERO ────────────────────────────────────────────────────────────────── */
   .dw-hero {
@@ -127,8 +139,22 @@ const GLOBAL_CSS = `
   }
   .dw-hero-sub {
     font-size: 15px; color: rgba(255,255,255,0.6);
-    line-height: 1.75; max-width: 560px; margin-bottom: 52px; font-weight: 400;
+    line-height: 1.75; max-width: 560px; margin-bottom: 30px; font-weight: 400;
   }
+  .dw-hero-cta { display: flex; align-items: center; gap: 12px 18px; flex-wrap: wrap; margin-bottom: 48px; }
+  .dw-btn-map {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    background: var(--yellow); color: var(--blue); border: none; border-radius: 6px;
+    font-size: 14px; font-weight: 800; font-family: 'Manrope', sans-serif; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(245,194,66,0.22);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .dw-btn-map:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(245,194,66,0.34); }
+  .dw-btn-map:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+  .dw-btn-map .material-symbols-outlined:last-child { transition: transform 0.15s; }
+  .dw-btn-map:hover .material-symbols-outlined:last-child { transform: translateX(3px); }
+  .dw-hero-cta-note { font-size: 12.5px; color: rgba(255,255,255,0.55); font-weight: 500; }
 
   .dw-hero-stats {
     display: flex; gap: 0; align-items: stretch;
@@ -562,6 +588,8 @@ const GLOBAL_CSS = `
     .dw-tab    { padding: 13px 12px; font-size: 11px; }
     .dw-hero   { padding: 44px 20px 40px; }
     .dw-hero-title { font-size: 36px; }
+    .dw-btn-map { width: 100%; justify-content: center; }
+    .dw-tab.featured::before { inset: 7px 3px; }
     .dw-hero-stats { flex-direction: column; width: 100%; border-radius: 6px; }
     .dw-hstat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 18px 22px; }
     .dw-hstat:last-child { border-bottom: none; }

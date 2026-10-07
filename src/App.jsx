@@ -221,7 +221,7 @@ function PointPanel({ p, t }) {
 /*  TAB COMPONENTS                                                              */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
-function TabBaza({ t }) {
+function TabBaza({ t, onOpenMap }) {
   return (
     <>
       <div className="dw-hero">
@@ -235,6 +235,14 @@ function TabBaza({ t }) {
             <em>{t.hero.titleEm}</em>
           </h1>
           <p className="dw-hero-sub dw-fade2">{t.hero.sub}</p>
+          <div className="dw-hero-cta dw-fade2">
+            <button className="dw-btn-map" onClick={onOpenMap}>
+              <Icon name="map" size={18} />
+              {t.hero.ctaMap}
+              <Icon name="arrow_forward" size={18} />
+            </button>
+            <span className="dw-hero-cta-note">{t.hero.ctaMapNote}</span>
+          </div>
           <div className="dw-hero-stats dw-fade3">
             {t.stats.map((s) => (
               <div className="dw-hstat" key={s.lbl}>
@@ -783,8 +791,14 @@ export default function App() {
     if (event) track(event, { lang });
   }, [active]);
 
+  /* CTA do mapy — osobny event, żeby odróżnić wejścia z hero od kliknięć w menu */
+  const openMapFromHero = () => {
+    track("map_cta_click", { from: "hero", lang });
+    setActive("przyklad");
+  };
+
   const panels = {
-    baza:     <TabBaza t={t} />,
+    baza:     <TabBaza t={t} onOpenMap={openMapFromHero} />,
     zrodla:   <TabZrodla t={t} />,
     przyklad: <TabPrzyklad t={t} />,
     pakiety:  <TabPakiety t={t} />,
@@ -821,11 +835,12 @@ export default function App() {
         {t.tabs.map((tab) => (
           <button
             key={tab.id}
-            className={`dw-tab${active === tab.id ? " active" : ""}`}
+            className={`dw-tab${active === tab.id ? " active" : ""}${tab.id === "przyklad" ? " featured" : ""}`}
             onClick={() => setActive(tab.id)}
           >
             <Icon name={tab.icon} size={16} style={{ opacity: 0.7 }} />
             {tab.label}
+            {tab.id === "przyklad" && <span className="dw-tab-live" />}
           </button>
         ))}
       </nav>
