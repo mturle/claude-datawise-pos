@@ -381,11 +381,26 @@ function TabPrzyklad({ t }) {
 
       const map = L.map(mapRef.current, { zoomControl: true }).setView([52.1, 19.4], 6);
 
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/">CARTO</a>',
-        subdomains: "abcd",
+      // Mapbox raster tiles (style light-v11); token wstrzykiwany przy buildzie z VITE_MAPBOX_TOKEN
+      L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/light-v11/tiles/512/{z}/{x}/{y}{r}?access_token={accessToken}", {
+        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noopener">Improve this map</a>',
+        accessToken: import.meta.env.VITE_MAPBOX_TOKEN,
+        tileSize: 512,
+        zoomOffset: -1,
         maxZoom: 19,
       }).addTo(map);
+
+      // logo Mapbox wymagane przez warunki Mapbox przy korzystaniu z ich stylów
+      const logo = L.control({ position: "bottomleft" });
+      logo.onAdd = () => {
+        const a = L.DomUtil.create("a", "dw-mapbox-logo");
+        a.href = "https://www.mapbox.com/";
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.setAttribute("aria-label", "Mapbox");
+        return a;
+      };
+      logo.addTo(map);
 
       fetch("/assets/data-sample-new.geojson")
         .then((r) => r.json())

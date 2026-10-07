@@ -499,6 +499,7 @@ const GLOBAL_CSS = `
   .dw-legend-sep { width: 1px; align-self: stretch; background: var(--border); margin: -4px 6px; }
   .dw-marker { background: transparent; border: none; }
   .leaflet-div-icon { background: transparent; border: none; }
+  .dw-mapbox-logo { display: block; width: 88px; height: 23px; background: url(/assets/mapbox-logo.svg) no-repeat; }
   .dw-map-info {
     padding: 20px 48px 0;
     font-size: 13px; color: var(--mid); line-height: 1.65;
@@ -553,7 +554,10 @@ const GLOBAL_CSS = `
 
   /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
   @media (max-width: 820px) {
-    .dw-header { padding: 14px 20px; }
+    .dw-header { padding: 14px 20px; gap: 12px; }
+    .dw-header-right { gap: 8px; min-width: 0; }
+    .dw-badge { padding: 4px 8px; letter-spacing: 0.06em; }
+    .dw-lang-switch { flex-shrink: 0; }
     .dw-nav    { padding: 0 12px; }
     .dw-tab    { padding: 13px 12px; font-size: 11px; }
     .dw-hero   { padding: 44px 20px 40px; }
@@ -568,6 +572,14 @@ const GLOBAL_CSS = `
     .dw-footer { flex-direction: column; align-items: flex-start; padding: 28px 20px; gap: 12px; }
     .dw-footer-contact { flex-direction: column; gap: 6px; }
     .dw-map-layout { flex-direction: column; height: auto; }
+    /* w kolumnie z height:auto rodzica 100% = 0 → mapa musi mieć własną wysokość */
+    .dw-map-container { flex: none; height: 55vh; height: 55svh; min-height: 300px; }
+    /* atrybucja zawija się obok logo Mapbox zamiast na nie nachodzić */
+    .dw-map-container .leaflet-control-attribution { max-width: calc(100vw - 110px); font-size: 10px; line-height: 1.35; }
+    .dw-map-legend { padding: 14px 20px; gap: 8px 16px; }
+    .dw-map-legend-title { flex-basis: 100%; }
+    .dw-legend-sep { display: none; }
+    .dw-legend-sep + .dw-map-legend-title { margin-top: 6px; }
     .dw-point-panel { width: 100%; max-width: none; min-width: unset; border-left: none; border-top: 1px solid var(--border); max-height: 320px; }
   }
 `;

@@ -52,6 +52,15 @@ która wysyła maila przez SMTP. Ustaw w Vercel (**Settings → Environment Vari
 
 Po zmianie zmiennych wykonaj ponowny deploy.
 
+## Zmienne środowiskowe (podkład mapy)
+Podkład mapy w zakładce „Próbka" to kafle Mapbox (styl `light-v11`). Token jest wstrzykiwany
+do bundla **w czasie builda**, więc musi być ustawiony w Vercel (scope **Production** i **Preview**)
+oraz lokalnie w `.env.local`:
+
+| Zmienna | Opis |
+|---|---|
+| `VITE_MAPBOX_TOKEN` | publiczny token Mapbox (`pk.…`) — w panelu Mapbox warto ograniczyć go do domen strony (URL restrictions) |
+
 ## Struktura
 ```
 src/
